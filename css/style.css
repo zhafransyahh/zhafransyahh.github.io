@@ -358,7 +358,7 @@ span.m-left{
 }
 
 .text a{
-    margin-bottom: 10rem;
+    margin-bottom: 15rem;
 }
 
 .text-main{
@@ -397,6 +397,7 @@ span.m-left{
     position: relative;
     text-align: center;
     border-radius: 4px;
+    
 }
 
 .portfolio_item .text {
@@ -404,7 +405,7 @@ span.m-left{
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: var(--clr-grey);
+    color: var(--clr-accent);
     visibility: hidden;
 }
 
@@ -412,6 +413,7 @@ span.m-left{
     transition: transform 750ms cubic-bezier(.5, 0, .5, 1), opacity 250ms linear;
     max-width: 100%;
     height: auto;
+    filter: brightness(30%);
 }
 
 .portfolio_item:focus {
@@ -560,4 +562,14 @@ span.m-left{
 
 .social-list_link {
     padding: .5em;
+}
+
+@media (max-width: 991px){
+    .footer{
+        position: fixed;
+        height: auto;
+        width: 100%;
+        left: 0;
+        bottom: 0;
+    }
 }
