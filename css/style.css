@@ -563,13 +563,3 @@ span.m-left{
 .social-list_link {
     padding: .5em;
 }
-
-@media (max-width: 991px){
-    .footer{
-        position: fixed;
-        height: auto;
-        width: 100%;
-        left: 0;
-        bottom: 0;
-    }
-}
