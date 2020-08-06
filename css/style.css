@@ -441,6 +441,18 @@ span.m-left{
     max-width: 100%;
 }
 
+/* Portfolio Item 2 - Netflix UI Redesign */
+
+.onProg{
+    letter-spacing: 3px;
+    word-spacing: 10px;
+    font-size: 1.5em;
+    display: grid;
+    place-items: center;
+    margin-top: 6em;
+    margin-bottom: 5em;
+}
+
 /* About Me Page*/
 
 .container-aboutMe{
@@ -529,6 +541,12 @@ span.m-left{
     bottom: 0;
     width: 100%;
 
+}
+
+.copyright-text{
+    font-size: .5em;
+    justify-content: center;
+    padding: .1em 0;
 }
 
 .footer a {
