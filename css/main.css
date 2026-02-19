@@ -447,7 +447,7 @@ img {
 
 .timeline__item {
     position: relative;
-    padding-bottom: 3rem;
+    padding-bottom: 4rem;
 }
 
 .timeline__item:last-child {
@@ -498,7 +498,7 @@ img {
 .timeline__company {
     font-family: var(--mono);
     font-size: 0.6875rem;
-    color: var(--text-muted);
+    color: var(--text-secondary);
     margin-top: 0.25rem;
     letter-spacing: 0.02em;
 }
@@ -534,7 +534,7 @@ img {
 
 .metric {
     background: var(--bg-card);
-    padding: 1.25rem 1rem;
+    padding: 1.5rem 1.25rem;
 }
 
 .metric__value {
@@ -543,17 +543,16 @@ img {
     font-size: 2rem;
     color: var(--accent);
     line-height: 1;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
     letter-spacing: -0.02em;
 }
 
 .metric__label {
-    font-family: var(--mono);
-    font-size: 0.5625rem;
-    color: var(--text-muted);
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
     line-height: 1.6;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0;
 }
 
 .timeline__highlights {
@@ -562,12 +561,12 @@ img {
 }
 
 .timeline__highlights li {
-    font-size: 0.8125rem;
+    font-size: 0.9375rem;
     color: var(--text-secondary);
     line-height: 1.8;
     padding-left: 1rem;
     position: relative;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
 }
 
 .timeline__highlights li::before {
