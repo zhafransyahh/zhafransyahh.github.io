@@ -455,20 +455,30 @@
             const section = document.getElementById(id);
             if (section) sections.push({ el: section, link: link });
         });
+
+        function setActive(link) {
+            navLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+        }
+
         const sectionObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 const match = sections.find(s => s.el === entry.target);
-                if (match) {
-                    if (entry.isIntersecting) {
-                        navLinks.forEach(l => l.classList.remove('active'));
-                        match.link.classList.add('active');
-                    }
+                if (match && entry.isIntersecting) {
+                    setActive(match.link);
                 }
             });
         }, { threshold: 0.15, rootMargin: '-80px 0px -40% 0px' });
         sections.forEach(s => sectionObserver.observe(s.el));
 
-        // Smooth scroll
+        // Highlight Contact when scrolled to bottom of page
+        const contactLink = document.querySelector('.nav__links a[href="#contact"]');
+        window.addEventListener('scroll', () => {
+            const atBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 10;
+            if (atBottom && contactLink) setActive(contactLink);
+        }, { passive: true });
+
+        // Smooth scroll + immediate active on click
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 const href = this.getAttribute('href');
@@ -481,6 +491,9 @@
                 if (target) {
                     e.preventDefault();
                     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // Immediately highlight the clicked nav item
+                    const clicked = document.querySelector(`.nav__links a[href="${href}"]`);
+                    if (clicked) setActive(clicked);
                 }
             });
         });
