@@ -503,9 +503,10 @@
         const toggleBtn = document.getElementById('timelineToggle');
         const moreSection = document.getElementById('timelineMore');
         if (toggleBtn && moreSection) {
+            moreSection.removeAttribute('hidden');
             toggleBtn.addEventListener('click', function () {
                 const isExpanded = this.getAttribute('aria-expanded') === 'true';
-                moreSection.hidden = isExpanded;
+                moreSection.classList.toggle('is-open', !isExpanded);
                 this.setAttribute('aria-expanded', !isExpanded);
                 this.innerHTML = isExpanded
                     ? 'Show earlier roles <span class="timeline__toggle-arrow">&darr;</span>'
