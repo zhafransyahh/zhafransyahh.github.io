@@ -179,38 +179,48 @@
                     </div>
                 </article>
 
-                <!-- Deaf to Dev -->
-                <article class="timeline__item reveal">
-                    <div class="timeline__marker timeline__marker--volunteer"></div>
-                    <div class="timeline__content">
-                        <div class="timeline__header">
-                            <div>
-                                <h3 class="timeline__role">Curriculum &amp; Learning Manager</h3>
-                                <div class="timeline__company">Deaf to Dev &mdash; Volunteer</div>
-                            </div>
-                            <time class="timeline__date">Jun 2021 &mdash; Mar 2022</time>
-                        </div>
-                        <p class="timeline__desc">Developed HTML/CSS web development curriculum for 58 deaf students, making tech education accessible to the hearing-impaired community.</p>
-                    </div>
-                </article>
+                <!-- Show more toggle -->
+                <button class="timeline__toggle" id="timelineToggle" aria-expanded="false">
+                    Show earlier roles <span class="timeline__toggle-arrow">&darr;</span>
+                </button>
 
-                <!-- Binus -->
-                <article class="timeline__item reveal">
-                    <div class="timeline__marker timeline__marker--secondary"></div>
-                    <div class="timeline__content">
-                        <div class="timeline__header">
-                            <div>
-                                <h3 class="timeline__role">Marketing Support</h3>
-                                <div class="timeline__company">Binus Business School &mdash; Jakarta &middot; Part-time</div>
+                <!-- Earlier roles (hidden by default) -->
+                <div class="timeline__more" id="timelineMore" hidden>
+
+                    <!-- Deaf to Dev -->
+                    <article class="timeline__item">
+                        <div class="timeline__marker timeline__marker--volunteer"></div>
+                        <div class="timeline__content">
+                            <div class="timeline__header">
+                                <div>
+                                    <h3 class="timeline__role">Curriculum &amp; Learning Manager</h3>
+                                    <div class="timeline__company">Deaf to Dev &mdash; Volunteer</div>
+                                </div>
+                                <time class="timeline__date">Jun 2021 &mdash; Mar 2022</time>
                             </div>
-                            <time class="timeline__date">Mar 2020 &mdash; Jan 2021</time>
+                            <p class="timeline__desc">Developed HTML/CSS web development curriculum for 58 deaf students, making tech education accessible to the hearing-impaired community.</p>
                         </div>
-                        <ul class="timeline__highlights">
-                            <li>Promoted International and Graduate Programs to prospective clients</li>
-                            <li>Managed client follow-ups and provided support for Admissions and Events</li>
-                        </ul>
-                    </div>
-                </article>
+                    </article>
+
+                    <!-- Binus -->
+                    <article class="timeline__item" style="padding-bottom:0;">
+                        <div class="timeline__marker timeline__marker--secondary"></div>
+                        <div class="timeline__content">
+                            <div class="timeline__header">
+                                <div>
+                                    <h3 class="timeline__role">Marketing Support</h3>
+                                    <div class="timeline__company">Binus Business School &mdash; Jakarta &middot; Part-time</div>
+                                </div>
+                                <time class="timeline__date">Mar 2020 &mdash; Jan 2021</time>
+                            </div>
+                            <ul class="timeline__highlights">
+                                <li>Promoted International and Graduate Programs to prospective clients</li>
+                                <li>Managed client follow-ups and provided support for Admissions and Events</li>
+                            </ul>
+                        </div>
+                    </article>
+
+                </div>
 
             </div>
         </div>
@@ -473,6 +483,21 @@
                 }
             });
         });
+    </script>
+    <script>
+        // Timeline "show more" toggle
+        const toggleBtn = document.getElementById('timelineToggle');
+        const moreSection = document.getElementById('timelineMore');
+        if (toggleBtn && moreSection) {
+            toggleBtn.addEventListener('click', function () {
+                const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                moreSection.hidden = isExpanded;
+                this.setAttribute('aria-expanded', !isExpanded);
+                this.innerHTML = isExpanded
+                    ? 'Show earlier roles <span class="timeline__toggle-arrow">&darr;</span>'
+                    : 'Hide earlier roles <span class="timeline__toggle-arrow">&uarr;</span>';
+            });
+        }
     </script>
 
 </body>

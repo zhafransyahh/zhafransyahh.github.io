@@ -580,6 +580,39 @@ img {
     background: var(--accent);
 }
 
+.timeline__toggle {
+    background: none;
+    border: 1px solid var(--border-light);
+    color: var(--text-muted);
+    font-family: var(--mono);
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.6rem 1.25rem;
+    border-radius: 2px;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    margin-left: 1rem;
+    transition: color 0.3s ease, border-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.timeline__toggle:hover {
+    color: var(--text-secondary);
+    border-color: var(--text-muted);
+}
+
+.timeline__toggle-arrow {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.timeline__more {
+    padding-top: 0.5rem;
+}
+
 /* ═══════════════════════════════════════
    SELECTED WORK
 ═══════════════════════════════════════ */
