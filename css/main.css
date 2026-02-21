@@ -7,6 +7,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    touch-action: manipulation;
 }
 
 :root {
@@ -38,6 +39,10 @@ body {
     font-size: 0.9375rem;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    overscroll-behavior-y: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 ::selection {
@@ -70,6 +75,8 @@ img {
     right: 0;
     z-index: 100;
     padding: 1rem 2rem;
+    padding-left: max(2rem, env(safe-area-inset-left));
+    padding-right: max(2rem, env(safe-area-inset-right));
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -229,7 +236,7 @@ img {
     min-height: 100vh;
     display: flex;
     align-items: center;
-    padding-top: 5rem;
+    padding-top: max(5rem, calc(env(safe-area-inset-top) + 4rem));
     position: relative;
 }
 
@@ -695,6 +702,7 @@ img {
     aspect-ratio: 16 / 10;
     object-fit: cover;
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
 }
 
 .work__thumb--contain {
@@ -1116,4 +1124,106 @@ a:focus-visible, button:focus-visible {
     color: var(--text-secondary);
     max-width: 560px;
     line-height: 1.85;
+}
+
+/* ═══════════════════════════════════════
+   HOVER: pointer devices only
+   Prevents hover states sticking on Android touch
+═══════════════════════════════════════ */
+@media (hover: hover) {
+    .work__item:hover .work__thumb { transform: scale(1.02); }
+    .work__item:hover .work__title { color: var(--accent); }
+    .work__item:hover .work__arrow { transform: translateX(4px); color: var(--accent); }
+    .work__item:hover .work__tag { border-color: var(--accent); color: var(--accent); }
+}
+
+/* Touch active-state feedback (replaces hover on mobile) */
+@media (hover: none) {
+    .work__item:active {
+        background: rgba(199, 91, 57, 0.06);
+        border-radius: 4px;
+    }
+}
+
+/* ═══════════════════════════════════════
+   MOBILE OPTIMIZATIONS  ≤768px
+═══════════════════════════════════════ */
+@media (max-width: 768px) {
+
+    /* Layout — tighter horizontal padding, reduced section gaps */
+    .container { padding: 0 1.25rem; }
+    .section { padding: 4rem 0; }
+    .section--compact { padding: 2.5rem 0; }
+    .contact { padding: 4rem 0; }
+
+    /* Contact bottom — safe area for home-indicator bar on notched phones */
+    .contact {
+        padding-bottom: max(4rem, calc(env(safe-area-inset-bottom) + 3rem));
+    }
+
+    /* Hero — hide "SCROLL" indicator (mobile users swipe) */
+    .hero__scroll { display: none; }
+
+    /* Nav toggle — expand hit area to 44×44px without changing 3-bar visual */
+    .nav__toggle {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .nav__toggle span {
+        width: 28px;
+        height: 20px;
+        display: block;
+        position: relative;
+    }
+
+    /* Social icon links — expand hit area to 44×44px */
+    .contact__socials a {
+        min-width: 44px;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Timeline metrics — single column (2×180px won't fit in 335px content width) */
+    .timeline__metrics {
+        grid-template-columns: 1fr;
+    }
+
+    /* Timeline toggle — adequate touch target height */
+    .timeline__toggle {
+        padding: 0.875rem 1.25rem;
+        min-height: 44px;
+    }
+
+    /* Footer — stack and center */
+    .footer__inner {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    /* About photo caption — center under portrait on single-column layout */
+    .about__photo-caption {
+        text-align: center;
+    }
+
+    /* Testimonial cards — tighter padding on small screens */
+    .testimonial__card {
+        padding: 1.5rem;
+    }
+}
+
+/* Very small screens: iPhone SE (375px), older Androids */
+@media (max-width: 480px) {
+    .hero__name {
+        font-size: clamp(2.25rem, 9vw, 3rem);
+    }
+}
+
+/* Dynamic viewport height — fixes iOS 100vh browser-chrome bug */
+@supports (min-height: 100dvh) {
+    .hero { min-height: 100dvh; }
 }
