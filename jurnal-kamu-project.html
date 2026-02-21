@@ -40,7 +40,7 @@
     background: var(--plum-deep);
     min-height: 100vh;
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: 1fr auto;
     padding: 4.5rem 4rem 3rem;
     position: relative;
     overflow: hidden;
@@ -64,37 +64,13 @@
     bottom: 50px; left: 10%;
   }
 
-  .hero-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 1;
-    position: relative;
-  }
-
-  .hero-nav .logo {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    font-size: 1.3rem;
-    color: var(--blush);
-    letter-spacing: 0.02em;
-  }
-
-  .hero-nav .tag {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    color: rgba(232,165,181,0.6);
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-  }
-
   .hero-content {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-end;
     z-index: 1;
     position: relative;
-    padding: 4rem 0;
+    padding-bottom: 3rem;
   }
 
   .hero-eyebrow {
@@ -728,13 +704,8 @@
   <div class="hero-bg-shape s1"></div>
   <div class="hero-bg-shape s2"></div>
 
-  <nav class="hero-nav">
-    <span class="logo">Jurnal Kamu</span>
-    <span class="tag">UX / UI Case Study</span>
-  </nav>
-
   <div class="hero-content">
-    <p class="hero-eyebrow">Mobile App · Mental Health · Journaling</p>
+    <p class="hero-eyebrow">UX / UI Case Study</p>
     <p class="hero-quote">"Memprioritaskan kesehatan mental dimulai dari KAMU"</p>
     <h1 class="hero-title">Your Mental<br><span>Health,</span><br>Your Journal.</h1>
     <p class="hero-desc">A guided mental health journaling application designed to help users reflect, process emotions, and build consistent self-care habits through daily check-ins and meaningful prompts.</p>

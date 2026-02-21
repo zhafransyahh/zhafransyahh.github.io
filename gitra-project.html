@@ -39,7 +39,7 @@
     background: var(--charcoal);
     min-height: 100vh;
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: 1fr auto;
     padding: 4.5rem 4rem 3rem;
     position: relative;
     overflow: hidden;
@@ -54,36 +54,12 @@
     pointer-events: none;
   }
 
-  .hero-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 1;
-  }
-
-  .hero-nav .logo {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 1.2rem;
-    color: var(--amber);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-  }
-
-  .hero-nav .tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--muted);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
   .hero-content {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-end;
     z-index: 1;
-    padding: 4rem 0;
+    padding-bottom: 3rem;
   }
 
   .hero-eyebrow {
@@ -569,13 +545,9 @@
 
 <!-- HERO -->
 <section class="hero">
-  <nav class="hero-nav">
-    <span class="logo">Gitra</span>
-    <span class="tag">UX / UI Case Study</span>
-  </nav>
   <div class="hero-content">
-    <p class="hero-eyebrow">Mobile App Design · Guitar Learning</p>
-    <h1 class="hero-title">Everyone can<br><em>learn guitar.</em></h1>
+    <p class="hero-eyebrow">UX / UI Case Study</p>
+    <h1 class="hero-title"><em>Gitra</em></h1>
     <p class="hero-desc">A mobile application designed to make guitar learning accessible, intuitive, and enjoyable — from beginner chords to expert technique.</p>
   </div>
   <div class="hero-meta">

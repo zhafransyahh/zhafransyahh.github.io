@@ -42,7 +42,7 @@
     background: var(--blue-dark);
     min-height: 100vh;
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: 1fr auto;
     padding: 4.5rem 4rem 3rem;
     position: relative;
     overflow: hidden;
@@ -66,42 +66,13 @@
     bottom: 60px; left: 5%;
   }
 
-  .hero-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 1;
-    position: relative;
-  }
-
-  .hero-nav .logo {
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 700;
-    font-size: 1.2rem;
-    color: var(--blue-light);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .hero-nav .logo span {
-    color: var(--mint);
-  }
-
-  .hero-nav .tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    color: rgba(168,212,255,0.5);
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-  }
-
   .hero-content {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-end;
     z-index: 1;
     position: relative;
-    padding: 4rem 0;
+    padding-bottom: 3rem;
   }
 
   .hero-eyebrow {
@@ -667,13 +638,8 @@
   <div class="hero-bg-shape s1"></div>
   <div class="hero-bg-shape s2"></div>
 
-  <nav class="hero-nav">
-    <span class="logo">HELM<span>-</span>IN</span>
-    <span class="tag">iOS / Product Case Study</span>
-  </nav>
-
   <div class="hero-content">
-    <p class="hero-eyebrow">iOS App · Smart Mobility · BINUS University</p>
+    <p class="hero-eyebrow">iOS / Product Case Study</p>
     <h1 class="hero-title">Ride Everywhere,<br><em>Hassle Free.</em></h1>
     <p class="hero-desc">A College Project in collaboration with Apple Developer Academy, designed to make helmet rental effortless for BINUS University students — scan, ride, and return.</p>
   </div>
