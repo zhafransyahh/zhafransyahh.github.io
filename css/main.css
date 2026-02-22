@@ -214,7 +214,7 @@ img {
    LAYOUT
 ═══════════════════════════════════════ */
 .container {
-    max-width: 1100px;
+    max-width: 1320px;
     margin: 0 auto;
     padding: 0 2rem;
 }
@@ -270,7 +270,7 @@ img {
 .hero__subtitle {
     font-size: 0.9375rem;
     color: var(--text-secondary);
-    max-width: 560px;
+    max-width: 640px;
     line-height: 1.9;
     margin-bottom: 3rem;
 }
@@ -350,7 +350,7 @@ img {
 
 @media (min-width: 768px) {
     .about__grid {
-        grid-template-columns: 380px 1fr;
+        grid-template-columns: 420px 1fr;
         gap: 4rem;
         align-items: start;
     }
@@ -364,7 +364,7 @@ img {
 
 .about__portrait img {
     width: 100%;
-    max-width: 380px;
+    max-width: 420px;
     aspect-ratio: 3 / 4;
     object-fit: cover;
     object-position: center top;
@@ -668,7 +668,7 @@ img {
 
 @media (min-width: 1000px) {
     .work__item {
-        grid-template-columns: 380px 1fr;
+        grid-template-columns: 420px 1fr;
         gap: 4rem;
     }
 }
@@ -1124,6 +1124,14 @@ a:focus-visible, button:focus-visible {
     color: var(--text-secondary);
     max-width: 560px;
     line-height: 1.85;
+}
+
+/* ═══════════════════════════════════════
+   LARGE DESKTOP  ≥1400px
+═══════════════════════════════════════ */
+@media (min-width: 1400px) {
+    .work__item { gap: 5rem; }
+    .about__grid { gap: 5rem; }
 }
 
 /* ═══════════════════════════════════════
