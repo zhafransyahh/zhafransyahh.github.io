@@ -31,6 +31,11 @@ html {
     scroll-behavior: smooth;
 }
 
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
 body {
     font-family: var(--sans);
     background: var(--bg);
@@ -43,6 +48,7 @@ body {
     text-size-adjust: 100%;
     overscroll-behavior-y: none;
     -webkit-tap-highlight-color: transparent;
+    animation: fadeIn 0.8s ease-out forwards;
 }
 
 ::selection {
@@ -80,11 +86,16 @@ img {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.nav--scrolled {
     background: rgba(13, 13, 12, 0.88);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border);
-    transition: transform 0.3s ease;
 }
 
 .nav__logo {
@@ -286,12 +297,13 @@ img {
     color: var(--accent);
     border-bottom: 1px solid var(--accent);
     padding-bottom: 0.25rem;
-    transition: gap 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .hero__cta:hover {
     gap: 1.25rem;
     color: var(--accent);
+    transform: translateY(-2px);
 }
 
 .hero__scroll {
@@ -471,6 +483,12 @@ img {
     background: var(--accent);
     border: 2px solid var(--bg);
     z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.timeline__item:hover .timeline__marker {
+    transform: scale(1.4);
+    box-shadow: 0 0 10px rgba(199, 91, 57, 0.4);
 }
 
 .timeline__marker--secondary {

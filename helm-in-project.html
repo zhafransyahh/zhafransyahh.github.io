@@ -1,905 +1,1028 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0A0F1E">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Helm-In — Smart Helmet Rental App</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230D0D0C'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Georgia,serif' font-size='16' font-weight='bold' fill='%23C75B39'%3ERZ%3C/text%3E%3C/svg%3E">
-<meta property="og:title" content="Helm-In — Smart Helmet Rental App">
-<meta property="og:description" content="iOS case study: Smart helmet rental app for campus mobility at BINUS University.">
-<meta property="og:type" content="article">
-<meta property="og:image" content="https://zhafransyahh.github.io/img/portfolioThumb1.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --blue: #3478F6;
-    --blue-deep: #1A3A6E;
-    --blue-dark: #0F1E3C;
-    --blue-light: #5B9BFF;
-    --sky: #A8D4FF;
-    --sky-pale: #E8F2FF;
-    --mint: #30D158;
-    --off-white: #F6F8FB;
-    --warm-white: #FAFBFD;
-    --text-dark: #0F1E3C;
-    --text-muted: #7C8BA1;
-    --border: rgba(52,120,246,0.12);
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--warm-white);
-    color: var(--text-dark);
-    font-family: 'DM Sans', sans-serif;
-    overflow-x: hidden;
-    -webkit-text-size-adjust: 100%;
-    text-size-adjust: 100%;
-    -webkit-tap-highlight-color: transparent;
-    overscroll-behavior-y: none;
-  }
-
-  /* HERO */
-  .hero {
-    background: var(--blue-dark);
-    min-height: 100vh;
-    display: grid;
-    grid-template-rows: 1fr auto;
-    padding: 4.5rem 4rem 3rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero-bg-shape {
-    position: absolute;
-    border-radius: 50%;
-    pointer-events: none;
-  }
-
-  .hero-bg-shape.s1 {
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(52,120,246,0.15) 0%, transparent 70%);
-    top: -120px; right: -80px;
-  }
-
-  .hero-bg-shape.s2 {
-    width: 400px; height: 400px;
-    background: radial-gradient(circle, rgba(48,209,88,0.1) 0%, transparent 70%);
-    bottom: 60px; left: 5%;
-  }
-
-  .hero-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    z-index: 1;
-    position: relative;
-    padding-bottom: 3rem;
-  }
-
-  .hero-eyebrow {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.72rem;
-    color: var(--sky);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.2s;
-  }
-
-  .hero-title {
-    font-family: 'DM Serif Display', serif;
-    font-weight: 400;
-    font-size: clamp(3.5rem, 8vw, 7rem);
-    line-height: 1.0;
-    color: var(--off-white);
-    margin-bottom: 1.5rem;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.4s;
-  }
-
-  .hero-title em {
-    font-style: italic;
-    color: var(--blue-light);
-  }
-
-  .hero-desc {
-    font-size: 1rem;
-    font-weight: 300;
-    color: rgba(246,248,251,0.6);
-    max-width: 500px;
-    line-height: 1.8;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.6s;
-  }
-
-  .hero-meta {
-    display: flex;
-    gap: 3rem;
-    z-index: 1;
-    position: relative;
-    padding-top: 2rem;
-    border-top: 1px solid rgba(168,212,255,0.1);
-    flex-wrap: wrap;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.8s;
-  }
-
-  .meta-item label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.6rem;
-    color: rgba(168,212,255,0.45);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    display: block;
-    margin-bottom: 0.3rem;
-  }
-
-  .meta-item span {
-    font-size: 0.9rem;
-    color: var(--off-white);
-    font-weight: 500;
-  }
-
-  /* SECTIONS */
-  section { padding: 6rem 2rem; }
-  section > * { max-width: 1100px; margin-left: auto; margin-right: auto; }
-
-  .section-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.68rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--blue);
-    margin-bottom: 1rem;
-  }
-
-  .section-title {
-    font-family: 'DM Serif Display', serif;
-    font-weight: 400;
-    font-size: clamp(2rem, 4vw, 3rem);
-    line-height: 1.15;
-    margin-bottom: 1.5rem;
-  }
-
-  /* OVERVIEW */
-  .overview {
-    background: var(--sky-pale);
-  }
-
-  .overview-grid {
-    display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
-    gap: 4rem;
-    margin-top: 2.5rem;
-    align-items: start;
-  }
-
-  .overview-text p {
-    font-size: 0.95rem;
-    line-height: 1.85;
-    color: rgba(15,30,60,0.7);
-    margin-bottom: 1.2rem;
-  }
-
-  .role-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 1.5rem;
-  }
-
-  .role-chip {
-    background: transparent;
-    border: 1px solid rgba(52,120,246,0.3);
-    color: var(--blue);
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    padding: 0.4rem 0.9rem;
-    border-radius: 100px;
-    letter-spacing: 0.06em;
-  }
-
-  .stats-col {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .stat-card {
-    background: var(--blue-dark);
-    color: var(--off-white);
-    border-radius: 16px;
-    padding: 1.5rem 2rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .stat-card::before {
-    content: '';
-    position: absolute;
-    width: 120px; height: 120px;
-    border-radius: 50%;
-    background: rgba(52,120,246,0.15);
-    top: -30px; right: -30px;
-  }
-
-  .stat-card .num {
-    font-family: 'DM Serif Display', serif;
-    font-size: 2.8rem;
-    color: var(--blue-light);
-    line-height: 1;
-    position: relative;
-  }
-
-  .stat-card .unit {
-    font-size: 1rem;
-    color: rgba(168,212,255,0.5);
-    margin-left: 2px;
-  }
-
-  .stat-card .lbl {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.62rem;
-    color: rgba(246,248,251,0.45);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-top: 0.4rem;
-    position: relative;
-  }
-
-  /* VISUAL DIRECTION */
-  .visual-dir {
-    background: var(--warm-white);
-  }
-
-  .vis-desc {
-    font-size: 0.95rem;
-    line-height: 1.8;
-    color: rgba(15,30,60,0.65);
-    max-width: 640px;
-    margin-bottom: 2.5rem;
-  }
-
-  .color-palette {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-top: 1.5rem;
-    margin-bottom: 3rem;
-  }
-
-  .swatch {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .swatch-circle {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-  }
-
-  .swatch-lbl {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.55rem;
-    color: var(--text-muted);
-    text-align: center;
-  }
-
-  .type-showcase {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin-top: 2rem;
-  }
-
-  .type-card {
-    background: var(--blue-dark);
-    border-radius: 16px;
-    padding: 2rem;
-    color: var(--off-white);
-  }
-
-  .type-name {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.6rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    margin-bottom: 0.8rem;
-  }
-
-  .type-sample { line-height: 1.3; }
-  .type-sample.display { font-family: 'DM Serif Display', serif; font-size: 1.8rem; }
-  .type-sample.body-font { font-family: 'DM Sans', sans-serif; font-size: 1.4rem; font-weight: 500; }
-  .type-sample.mono-font { font-family: 'DM Mono', monospace; font-size: 1.2rem; }
-
-  /* FEATURES */
-  .features {
-    background: var(--blue-dark);
-    color: var(--off-white);
-  }
-
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    margin-top: 3rem;
-  }
-
-  .feature-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(168,212,255,0.08);
-    border-radius: 20px;
-    padding: 2rem;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.3s ease, border-color 0.3s ease;
-  }
-
-  .feature-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(52,120,246,0.3);
-  }
-
-  .feature-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(52,120,246,0.05) 0%, transparent 60%);
-    pointer-events: none;
-  }
-
-  .feature-num {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--blue-light);
-    letter-spacing: 0.15em;
-    margin-bottom: 1rem;
-  }
-
-  .feature-icon {
-    width: 48px;
-    height: 48px;
-    background: rgba(52,120,246,0.1);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.4rem;
-    margin-bottom: 1.2rem;
-  }
-
-  .feature-card h3 {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 0.6rem;
-    color: var(--off-white);
-  }
-
-  .feature-card p {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    line-height: 1.7;
-  }
-
-  /* SCREENS */
-  .screens-section {
-    background: var(--sky-pale);
-  }
-
-  .screens-desc {
-    font-size: 0.95rem;
-    line-height: 1.8;
-    color: rgba(15,30,60,0.65);
-    max-width: 640px;
-    margin-bottom: 3rem;
-  }
-
-  .screens-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
-  }
-
-  .screen-card {
-    border-radius: 24px;
-    overflow: hidden;
-    border: 1.5px solid var(--border);
-    background: white;
-    box-shadow: 0 4px 24px rgba(52,120,246,0.08);
-    transition: transform 0.3s, box-shadow 0.3s;
-  }
-
-  .screen-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 40px rgba(52,120,246,0.15);
-  }
-
-  .screen-top {
-    background: linear-gradient(135deg, var(--blue), var(--blue-light));
-    height: 8px;
-  }
-
-  .screen-body {
-    padding: 1.5rem;
-    min-height: 260px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .mock-bar {
-    height: 8px;
-    border-radius: 4px;
-    background: var(--sky-pale);
-  }
-
-  .mock-bar.title { height: 14px; width: 60%; background: var(--blue-dark); opacity: 0.12; }
-  .mock-bar.sub { width: 80%; background: var(--blue-light); opacity: 0.2; }
-  .mock-bar.full { width: 100%; }
-  .mock-bar.short { width: 45%; }
-  .mock-bar.med { width: 70%; }
-  .mock-bar.accent { background: var(--blue); opacity: 0.3; height: 32px; border-radius: 8px; }
-
-  .mock-balance {
-    background: linear-gradient(135deg, var(--blue-dark), var(--blue-deep));
-    border-radius: 12px;
-    padding: 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .mock-balance-num {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.1rem;
-    color: var(--sky);
-    opacity: 0.8;
-  }
-
-  .mock-balance-lbl {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.5rem;
-    color: rgba(168,212,255,0.4);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  .mock-icon-row {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    margin: 4px 0;
-  }
-
-  .mock-icon-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    background: var(--sky-pale);
-    opacity: 0.6;
-  }
-
-  .mock-map {
-    background: linear-gradient(180deg, #C8E6FF 0%, #E8F2FF 100%);
-    border-radius: 10px;
-    flex: 1;
-    min-height: 60px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .mock-map::after {
-    content: '📍';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1.2rem;
-    opacity: 0.6;
-  }
-
-  .mock-qr {
-    width: 60px;
-    height: 60px;
-    border-radius: 8px;
-    background: var(--blue-dark);
-    opacity: 0.1;
-    margin: 8px auto;
-  }
-
-  .screen-label-box {
-    padding: 0.8rem 1.5rem;
-    border-top: 1px solid var(--border);
-  }
-
-  .screen-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.6rem;
-    color: var(--text-muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  /* AVAILABILITY */
-  .availability {
-    background: var(--blue-dark);
-    color: var(--off-white);
-    text-align: center;
-    padding: 5rem 4rem;
-  }
-
-  .avail-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: rgba(52,120,246,0.15);
-    border: 1px solid rgba(52,120,246,0.3);
-    border-radius: 100px;
-    padding: 0.5rem 1.2rem;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--blue-light);
-    letter-spacing: 0.1em;
-    margin-bottom: 2rem;
-  }
-
-  .avail-badge .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--mint);
-  }
-
-  .avail-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    line-height: 1.1;
-    margin-bottom: 1rem;
-  }
-
-  .avail-title em {
-    font-style: italic;
-    color: var(--blue-light);
-  }
-
-  .avail-desc {
-    font-size: 0.95rem;
-    color: var(--text-muted);
-    max-width: 480px;
-    margin: 0 auto;
-    line-height: 1.7;
-  }
-
-  /* FOOTER */
-  footer {
-    background: var(--blue-dark);
-    padding: 3rem 4rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid rgba(168,212,255,0.06);
-  }
-
-  footer .f-brand {
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 700;
-    font-size: 1.5rem;
-    color: var(--blue-light);
-    letter-spacing: 0.05em;
-  }
-
-  footer .f-brand span {
-    color: var(--mint);
-  }
-
-  footer .f-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.6rem;
-    color: rgba(246,248,251,0.3);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    text-align: right;
-    line-height: 1.8;
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @media (max-width: 768px) {
-    section { padding: 4rem 1.5rem; }
-    .hero { padding: 4rem 1.5rem 2rem; }
-    .hero-meta { gap: 1.5rem; }
-    .overview-grid, .type-showcase, .features-grid, .screens-grid { grid-template-columns: 1fr; }
-    .availability { padding: 4rem 1.5rem; }
-    footer { flex-direction: column; gap: 1rem; text-align: center; }
-    footer .f-tag { text-align: center; }
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0A0F1E">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Helm-In — Smart Helmet Rental App</title>
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230D0D0C'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Georgia,serif' font-size='16' font-weight='bold' fill='%23C75B39'%3ERZ%3C/text%3E%3C/svg%3E">
+  <meta property="og:title" content="Helm-In — Smart Helmet Rental App">
+  <meta property="og:description"
+    content="iOS case study: Smart helmet rental app for campus mobility at BINUS University.">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://zhafransyahh.github.io/img/portfolioThumb1.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --blue: #3478F6;
+      --blue-deep: #1A3A6E;
+      --blue-dark: #0F1E3C;
+      --blue-light: #5B9BFF;
+      --sky: #A8D4FF;
+      --sky-pale: #E8F2FF;
+      --mint: #30D158;
+      --off-white: #F6F8FB;
+      --warm-white: #FAFBFD;
+      --text-dark: #0F1E3C;
+      --text-muted: #7C8BA1;
+      --border: rgba(52, 120, 246, 0.12);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--warm-white);
+      color: var(--text-dark);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      -webkit-tap-highlight-color: transparent;
+      overscroll-behavior-y: none;
+    }
+
+    /* HERO */
+    .hero {
+      background: var(--blue-dark);
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      padding: 4.5rem 4rem 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg-shape {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero-bg-shape.s1 {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(52, 120, 246, 0.15) 0%, transparent 70%);
+      top: -120px;
+      right: -80px;
+    }
+
+    .hero-bg-shape.s2 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(48, 209, 88, 0.1) 0%, transparent 70%);
+      bottom: 60px;
+      left: 5%;
+    }
+
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      z-index: 1;
+      position: relative;
+      padding-bottom: 3rem;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--sky);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.2s;
+    }
+
+    .hero-title {
+      font-family: 'DM Serif Display', serif;
+      font-weight: 400;
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      line-height: 1.0;
+      color: var(--off-white);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.4s;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--blue-light);
+    }
+
+    .hero-desc {
+      font-size: 1rem;
+      font-weight: 300;
+      color: rgba(246, 248, 251, 0.6);
+      max-width: 500px;
+      line-height: 1.8;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.6s;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 3rem;
+      z-index: 1;
+      position: relative;
+      padding-top: 2rem;
+      margin-bottom: 2rem;
+      border-top: 1px solid rgba(168, 212, 255, 0.1);
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.8s;
+    }
+
+    .meta-item label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      color: rgba(168, 212, 255, 0.45);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .meta-item span {
+      font-size: 0.9rem;
+      color: var(--off-white);
+      font-weight: 500;
+    }
+
+    /* SECTIONS */
+    section {
+      padding: 6rem 2rem;
+    }
+
+    section>* {
+      max-width: 1100px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-weight: 400;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+    }
+
+    /* OVERVIEW */
+    .overview {
+      background: var(--sky-pale);
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 4rem;
+      margin-top: 2.5rem;
+      align-items: start;
+    }
+
+    .overview-text p {
+      font-size: 0.95rem;
+      line-height: 1.85;
+      color: rgba(15, 30, 60, 0.7);
+      margin-bottom: 1.2rem;
+    }
+
+    .role-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .role-chip {
+      background: transparent;
+      border: 1px solid rgba(52, 120, 246, 0.3);
+      color: var(--blue);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      padding: 0.4rem 0.9rem;
+      border-radius: 100px;
+      letter-spacing: 0.06em;
+    }
+
+    .stats-col {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .stat-card {
+      background: var(--blue-dark);
+      color: var(--off-white);
+      border-radius: 16px;
+      padding: 1.5rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: rgba(52, 120, 246, 0.15);
+      top: -30px;
+      right: -30px;
+    }
+
+    .stat-card .num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.8rem;
+      color: var(--blue-light);
+      line-height: 1;
+      position: relative;
+    }
+
+    .stat-card .unit {
+      font-size: 1rem;
+      color: rgba(168, 212, 255, 0.5);
+      margin-left: 2px;
+    }
+
+    .stat-card .lbl {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      color: rgba(246, 248, 251, 0.45);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 0.4rem;
+      position: relative;
+    }
+
+    /* VISUAL DIRECTION */
+    .visual-dir {
+      background: var(--warm-white);
+    }
+
+    .vis-desc {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: rgba(15, 30, 60, 0.65);
+      max-width: 640px;
+      margin-bottom: 2.5rem;
+    }
+
+    .color-palette {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .swatch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .swatch-circle {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .swatch-lbl {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .type-showcase {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .type-card {
+      background: var(--blue-dark);
+      border-radius: 16px;
+      padding: 2rem;
+      color: var(--off-white);
+    }
+
+    .type-name {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.8rem;
+    }
+
+    .type-sample {
+      line-height: 1.3;
+    }
+
+    .type-sample.display {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.8rem;
+    }
+
+    .type-sample.body-font {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 500;
+    }
+
+    .type-sample.mono-font {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.2rem;
+    }
+
+    /* FEATURES */
+    .features {
+      background: var(--blue-dark);
+      color: var(--off-white);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(168, 212, 255, 0.08);
+      border-radius: 20px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(52, 120, 246, 0.3);
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(52, 120, 246, 0.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .feature-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--blue-light);
+      letter-spacing: 0.15em;
+      margin-bottom: 1rem;
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(52, 120, 246, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .feature-card h3 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+      color: var(--off-white);
+    }
+
+    .feature-card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* SCREENS */
+    .screens-section {
+      background: var(--sky-pale);
+    }
+
+    .screens-desc {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: rgba(15, 30, 60, 0.65);
+      max-width: 640px;
+      margin-bottom: 3rem;
+    }
+
+    .screens-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+
+    .screen-card {
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1.5px solid var(--border);
+      background: white;
+      box-shadow: 0 4px 24px rgba(52, 120, 246, 0.08);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .screen-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 40px rgba(52, 120, 246, 0.15);
+    }
+
+    .screen-top {
+      background: linear-gradient(135deg, var(--blue), var(--blue-light));
+      height: 8px;
+    }
+
+    .screen-body {
+      padding: 1.5rem;
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .mock-bar {
+      height: 8px;
+      border-radius: 4px;
+      background: var(--sky-pale);
+    }
+
+    .mock-bar.title {
+      height: 14px;
+      width: 60%;
+      background: var(--blue-dark);
+      opacity: 0.12;
+    }
+
+    .mock-bar.sub {
+      width: 80%;
+      background: var(--blue-light);
+      opacity: 0.2;
+    }
+
+    .mock-bar.full {
+      width: 100%;
+    }
+
+    .mock-bar.short {
+      width: 45%;
+    }
+
+    .mock-bar.med {
+      width: 70%;
+    }
+
+    .mock-bar.accent {
+      background: var(--blue);
+      opacity: 0.3;
+      height: 32px;
+      border-radius: 8px;
+    }
+
+    .mock-balance {
+      background: linear-gradient(135deg, var(--blue-dark), var(--blue-deep));
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .mock-balance-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      color: var(--sky);
+      opacity: 0.8;
+    }
+
+    .mock-balance-lbl {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.5rem;
+      color: rgba(168, 212, 255, 0.4);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .mock-icon-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin: 4px 0;
+    }
+
+    .mock-icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--sky-pale);
+      opacity: 0.6;
+    }
+
+    .mock-map {
+      background: linear-gradient(180deg, #C8E6FF 0%, #E8F2FF 100%);
+      border-radius: 10px;
+      flex: 1;
+      min-height: 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mock-map::after {
+      content: '📍';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.2rem;
+      opacity: 0.6;
+    }
+
+    .mock-qr {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      background: var(--blue-dark);
+      opacity: 0.1;
+      margin: 8px auto;
+    }
+
+    .screen-label-box {
+      padding: 0.8rem 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .screen-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* AVAILABILITY */
+    .availability {
+      background: var(--blue-dark);
+      color: var(--off-white);
+      text-align: center;
+      padding: 5rem 4rem;
+    }
+
+    .avail-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(52, 120, 246, 0.15);
+      border: 1px solid rgba(52, 120, 246, 0.3);
+      border-radius: 100px;
+      padding: 0.5rem 1.2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--blue-light);
+      letter-spacing: 0.1em;
+      margin-bottom: 2rem;
+    }
+
+    .avail-badge .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--mint);
+    }
+
+    .avail-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .avail-title em {
+      font-style: italic;
+      color: var(--blue-light);
+    }
+
+    .avail-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--blue-dark);
+      padding: 3rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(168, 212, 255, 0.06);
+    }
+
+    footer .f-brand {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--blue-light);
+      letter-spacing: 0.05em;
+    }
+
+    footer .f-brand span {
+      color: var(--mint);
+    }
+
+    footer .f-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      color: rgba(246, 248, 251, 0.3);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-align: right;
+      line-height: 1.8;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      section {
+        padding: 4rem 1.5rem;
+      }
+
+      .hero {
+        padding: 4rem 1.5rem 2rem;
+      }
+
+      .hero-meta {
+        gap: 1.5rem;
+      }
+
+      .overview-grid,
+      .type-showcase,
+      .features-grid,
+      .screens-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .availability {
+        padding: 4rem 1.5rem;
+      }
+
+      footer {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+
+      footer .f-tag {
+        text-align: center;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- SITE NAV -->
-<nav style="position:fixed;top:0;left:0;right:0;z-index:100;padding:0.75rem 2rem;display:flex;justify-content:space-between;align-items:center;background:rgba(15,30,60,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(168,212,255,0.06);font-family:'DM Mono',monospace;">
-    <a href="index.html" style="font-family:'DM Mono',monospace;font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(168,212,255,0.5);text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;transition:color 0.3s;"
-       onmouseover="this.style.color='#5B9BFF'" onmouseout="this.style.color='rgba(168,212,255,0.5)'">&larr; Back to portfolio</a>
-    <a href="index.html" style="font-family:'DM Mono',monospace;font-size:0.6875rem;letter-spacing:-0.02em;color:rgba(246,248,251,0.7);text-decoration:none;">R<span style="color:#5B9BFF;">.</span>Z</a>
-</nav>
-<div style="height:44px;background:#0F1E3C;"></div>
+  <!-- SITE NAV -->
+  <nav
+    style="position:fixed;top:0;left:0;right:0;z-index:100;padding:0.75rem 2rem;display:flex;justify-content:space-between;align-items:center;background:rgba(15,30,60,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(168,212,255,0.06);font-family:'DM Mono',monospace;">
+    <a href="index.html"
+      style="font-family:'DM Mono',monospace;font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(168,212,255,0.5);text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;transition:color 0.3s;"
+      onmouseover="this.style.color='#5B9BFF'" onmouseout="this.style.color='rgba(168,212,255,0.5)'">&larr; Back to
+      portfolio</a>
+    <a href="index.html"
+      style="font-family:'DM Mono',monospace;font-size:0.6875rem;letter-spacing:-0.02em;color:rgba(246,248,251,0.7);text-decoration:none;">R<span
+        style="color:#5B9BFF;">.</span>Z</a>
+  </nav>
+  <div style="height:44px;background:#0F1E3C;"></div>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-bg-shape s1"></div>
-  <div class="hero-bg-shape s2"></div>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg-shape s1"></div>
+    <div class="hero-bg-shape s2"></div>
 
-  <div class="hero-content">
-    <p class="hero-eyebrow">iOS / Product Case Study</p>
-    <h1 class="hero-title">Ride Everywhere,<br><em>Hassle Free.</em></h1>
-    <p class="hero-desc">A College Project in collaboration with Apple Developer Academy, designed to make helmet rental effortless for BINUS University students — scan, ride, and return.</p>
-  </div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Product Case Study</p>
+      <h1 class="hero-title">Ride Everywhere,<br><em>Hassle Free.</em></h1>
+      <p class="hero-desc">A College Project, designed to make helmet
+        rental effortless for BINUS University students — scan, ride, and return.</p>
+    </div>
 
-  <div class="hero-meta">
-    <div class="meta-item">
-      <label>Platform</label>
-      <span>iOS (iPhone)</span>
-    </div>
-    <div class="meta-item">
-      <label>Context</label>
-      <span>Apple Developer Academy</span>
-    </div>
-    <div class="meta-item">
-      <label>Scope</label>
-      <span>BINUS University Campus</span>
-    </div>
-    <div class="meta-item">
-      <label>Type</label>
-      <span>End-to-End Product</span>
-    </div>
-  </div>
-</section>
-
-<!-- OVERVIEW -->
-<section class="overview">
-  <p class="section-label">01 — Overview</p>
-  <h2 class="section-title">What is Helm-In?</h2>
-  <div class="overview-grid">
-    <div class="overview-text">
-      <p>Helm-In is a smart helmet rental app built for BINUS University students. The challenge: riding to campus on a motorbike is the default for many Indonesian students, but carrying a helmet around campus all day is a hassle — and not having one means unsafe rides.</p>
-      <p>Helm-In solves this by placing smart helmet lockers around the BINUS campus. Students scan a QR code via the app, rent a helmet from the nearest station, ride safely, and return it at any locker. Credits-based pricing keeps it affordable.</p>
-      <div class="role-list">
-        <span class="role-chip">iOS Development</span>
-        <span class="role-chip">Product Management</span>
-        <span class="role-chip">UI/UX Design</span>
-        <span class="role-chip">QR Integration</span>
-        <span class="role-chip">Map Functionality</span>
-        <span class="role-chip">Payment System</span>
+    <div class="hero-meta">
+      <div class="meta-item">
+        <label>Platform</label>
+        <span>iOS (iPhone)</span>
+      </div>
+      <div class="meta-item">
+        <label>Context</label>
+        <span>Personal College Project</span>
+      </div>
+      <div class="meta-item">
+        <label>Scope</label>
+        <span>BINUS University Campus</span>
+      </div>
+      <div class="meta-item">
+        <label>Type</label>
+        <span>End-to-End Product</span>
       </div>
     </div>
-    <div class="stats-col">
-      <div class="stat-card">
-        <div class="num">iOS</div>
-        <div class="lbl">Platform — built with Swift</div>
-      </div>
-      <div class="stat-card">
-        <div class="num">QR</div>
-        <div class="lbl">Scan-based helmet rental</div>
-      </div>
-      <div class="stat-card">
-        <div class="num">Rp3K<span class="unit">/hr</span></div>
-        <div class="lbl">Affordable credit-based pricing</div>
-      </div>
-    </div>
-  </div>
-</section>
+  </section>
 
-<!-- VISUAL DIRECTION -->
-<section class="visual-dir">
-  <p class="section-label">02 — Visual Direction</p>
-  <h2 class="section-title">Design Language</h2>
-  <p class="vis-desc">Helm-In's visual identity combines clean blues with subtle gradients — evoking trust, safety, and modern mobility. The palette balances a professional tech feel with approachable softness suitable for a student audience.</p>
-
-  <p class="section-label" style="margin-top:2rem;">Color Palette</p>
-  <div class="color-palette">
-    <div class="swatch">
-      <div class="swatch-circle" style="background:#3478F6;"></div>
-      <span class="swatch-lbl">Primary Blue<br>#3478F6</span>
-    </div>
-    <div class="swatch">
-      <div class="swatch-circle" style="background:#1A3A6E;"></div>
-      <span class="swatch-lbl">Blue Deep<br>#1A3A6E</span>
-    </div>
-    <div class="swatch">
-      <div class="swatch-circle" style="background:#5B9BFF;"></div>
-      <span class="swatch-lbl">Blue Light<br>#5B9BFF</span>
-    </div>
-    <div class="swatch">
-      <div class="swatch-circle" style="background:#A8D4FF;"></div>
-      <span class="swatch-lbl">Sky<br>#A8D4FF</span>
-    </div>
-    <div class="swatch">
-      <div class="swatch-circle" style="background:#30D158;"></div>
-      <span class="swatch-lbl">Mint Green<br>#30D158</span>
-    </div>
-    <div class="swatch">
-      <div class="swatch-circle" style="background:#0F1E3C;"></div>
-      <span class="swatch-lbl">Dark Navy<br>#0F1E3C</span>
-    </div>
-    <div class="swatch">
-      <div class="swatch-circle" style="background:#F6F8FB; border: 1px solid #ddd;"></div>
-      <span class="swatch-lbl">Off White<br>#F6F8FB</span>
-    </div>
-  </div>
-
-  <p class="section-label">Typography</p>
-  <div class="type-showcase">
-    <div class="type-card">
-      <p class="type-name">Display Serif</p>
-      <p class="type-sample display">Helm-In</p>
-      <p style="font-family:'DM Mono',monospace; font-size:0.6rem; color:#666; margin-top:0.8rem;">Hero titles and<br>section headings.</p>
-    </div>
-    <div class="type-card">
-      <p class="type-name">Body Sans</p>
-      <p class="type-sample body-font">DM Sans<br>Medium</p>
-      <p style="font-family:'DM Mono',monospace; font-size:0.6rem; color:#666; margin-top:0.8rem;">Body text, UI labels,<br>and buttons.</p>
-    </div>
-    <div class="type-card">
-      <p class="type-name">Mono / Data</p>
-      <p class="type-sample mono-font">Rp123.567<br>QR-0042</p>
-      <p style="font-family:'DM Mono',monospace; font-size:0.6rem; color:#666; margin-top:0.8rem;">Pricing, codes, and<br>transaction data.</p>
-    </div>
-  </div>
-</section>
-
-<!-- FEATURES -->
-<section class="features">
-  <p class="section-label" style="color:rgba(168,212,255,0.5);">03 — Features</p>
-  <h2 class="section-title" style="color: var(--off-white);">Core Capabilities</h2>
-
-  <div class="features-grid">
-    <div class="feature-card">
-      <p class="feature-num">F-01</p>
-      <div class="feature-icon">🏠</div>
-      <h3>Seamless Home Screen</h3>
-      <p>A clean, glanceable home dashboard showing your current balance, active rentals, and quick access to nearby helmet stations — everything you need in one view.</p>
-    </div>
-    <div class="feature-card">
-      <p class="feature-num">F-02</p>
-      <div class="feature-icon">📷</div>
-      <h3>Simple Rent Page</h3>
-      <p>Scan the QR code on the Helm-In station locker, confirm the rental, and you're good to go. The entire flow takes under 10 seconds from scan to unlock.</p>
-    </div>
-    <div class="feature-card">
-      <p class="feature-num">F-03</p>
-      <div class="feature-icon">🗺️</div>
-      <h3>Maps of Lockers</h3>
-      <p>An integrated map view showing all Helm-In stations near the BINUS campus, with real-time availability indicators so you always know where to find a helmet.</p>
-    </div>
-    <div class="feature-card">
-      <p class="feature-num">F-04</p>
-      <div class="feature-icon">💳</div>
-      <h3>Easy Top-Up</h3>
-      <p>Add credits through multiple payment methods — BCA debit, GoPay balance, and more. Pricing is transparent: Rp3,000/hr with a Rp30,000/day max. Top up and ride.</p>
-    </div>
-  </div>
-</section>
-
-<!-- SCREENS -->
-<section class="screens-section">
-  <p class="section-label">04 — Screens</p>
-  <h2 class="section-title">Key UI Screens</h2>
-  <p class="screens-desc">Each screen was designed for speed and clarity — a student standing at a locker should be able to complete any action in under 10 seconds.</p>
-
-  <div class="screens-grid">
-    <!-- Home -->
-    <div class="screen-card">
-      <div class="screen-top"></div>
-      <div class="screen-body">
-        <div class="mock-bar title"></div>
-        <div class="mock-balance">
-          <div class="mock-balance-num">Rp123,567</div>
-          <div class="mock-balance-lbl">Your Balance</div>
+  <!-- OVERVIEW -->
+  <section class="overview">
+    <p class="section-label">01 — Overview</p>
+    <h2 class="section-title">What is Helm-In?</h2>
+    <div class="overview-grid">
+      <div class="overview-text">
+        <p>Helm-In is a smart helmet rental app built for BINUS University students. The challenge: riding to campus on
+          a motorbike is the default for many Indonesian students, but carrying a helmet around campus all day is a
+          hassle — and not having one means unsafe rides.</p>
+        <p>Helm-In solves this by placing smart helmet lockers around the BINUS campus. Students scan a QR code via the
+          app, rent a helmet from the nearest station, ride safely, and return it at any locker. Credits-based pricing
+          keeps it affordable.</p>
+        <div class="role-list">
+          <span class="role-chip">iOS Development</span>
+          <span class="role-chip">Product Management</span>
+          <span class="role-chip">UI/UX Design</span>
+          <span class="role-chip">QR Integration</span>
+          <span class="role-chip">Map Functionality</span>
+          <span class="role-chip">Payment System</span>
         </div>
-        <div class="mock-icon-row">
-          <div class="mock-icon-btn"></div>
-          <div class="mock-icon-btn"></div>
-          <div class="mock-icon-btn"></div>
-          <div class="mock-icon-btn"></div>
+      </div>
+      <div class="stats-col">
+        <div class="stat-card">
+          <div class="num">iOS</div>
+          <div class="lbl">Platform — built with Swift</div>
         </div>
-        <div class="mock-bar full"></div>
-        <div class="mock-bar med"></div>
-      </div>
-      <div class="screen-label-box">
-        <span class="screen-label">Home Screen</span>
-      </div>
-    </div>
-
-    <!-- Rent -->
-    <div class="screen-card">
-      <div class="screen-top"></div>
-      <div class="screen-body">
-        <div class="mock-bar title"></div>
-        <div class="mock-bar sub"></div>
-        <div class="mock-qr"></div>
-        <div class="mock-bar short" style="margin: 0 auto;"></div>
-        <div style="height:4px;"></div>
-        <div class="mock-bar med"></div>
-        <div class="mock-bar accent"></div>
-      </div>
-      <div class="screen-label-box">
-        <span class="screen-label">Rent Page</span>
-      </div>
-    </div>
-
-    <!-- Map -->
-    <div class="screen-card">
-      <div class="screen-top"></div>
-      <div class="screen-body">
-        <div class="mock-bar title"></div>
-        <div class="mock-map"></div>
-        <div class="mock-bar full"></div>
-        <div class="mock-bar short"></div>
-      </div>
-      <div class="screen-label-box">
-        <span class="screen-label">Locker Map</span>
-      </div>
-    </div>
-
-    <!-- Top Up -->
-    <div class="screen-card">
-      <div class="screen-top"></div>
-      <div class="screen-body">
-        <div class="mock-bar title"></div>
-        <div class="mock-balance">
-          <div class="mock-balance-num">Rp180,000</div>
-          <div class="mock-balance-lbl">Top Up Amount</div>
+        <div class="stat-card">
+          <div class="num">QR</div>
+          <div class="lbl">Scan-based helmet rental</div>
         </div>
-        <div style="height:4px;"></div>
-        <div class="mock-bar full"></div>
-        <div class="mock-bar med"></div>
-        <div class="mock-bar short"></div>
-        <div style="flex:1;"></div>
-        <div class="mock-bar accent"></div>
-      </div>
-      <div class="screen-label-box">
-        <span class="screen-label">Top Up</span>
+        <div class="stat-card">
+          <div class="num">Rp3K<span class="unit">/hr</span></div>
+          <div class="lbl">Affordable credit-based pricing</div>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- AVAILABILITY -->
-<section class="availability">
-  <div class="avail-badge">
-    <span class="dot"></span>
-    BINUS University Exclusive
-  </div>
-  <h2 class="avail-title">Currently available for<br><em>BINUS University Students</em></h2>
-  <p class="avail-desc">Helm-In is a campus-exclusive service available at BINUS University. Stations are placed at key campus entry points for maximum convenience.</p>
-</section>
+  <!-- VISUAL DIRECTION -->
+  <section class="visual-dir">
+    <p class="section-label">02 — Visual Direction</p>
+    <h2 class="section-title">Design Language</h2>
+    <p class="vis-desc">Helm-In's visual identity combines clean blues with subtle gradients — evoking trust, safety,
+      and modern mobility. The palette balances a professional tech feel with approachable softness suitable for a
+      student audience.</p>
 
-<!-- FOOTER -->
-<footer>
-  <div class="f-brand">HELM<span>-</span>IN</div>
-  <div class="f-tag">
-    iOS App · Apple Developer Academy<br>
-    BINUS University · Smart Mobility<br>
-    Ride Everywhere, Hassle Free.
-  </div>
-</footer>
+    <p class="section-label" style="margin-top:2rem;">Color Palette</p>
+    <div class="color-palette">
+      <div class="swatch">
+        <div class="swatch-circle" style="background:#3478F6;"></div>
+        <span class="swatch-lbl">Primary Blue<br>#3478F6</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-circle" style="background:#1A3A6E;"></div>
+        <span class="swatch-lbl">Blue Deep<br>#1A3A6E</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-circle" style="background:#5B9BFF;"></div>
+        <span class="swatch-lbl">Blue Light<br>#5B9BFF</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-circle" style="background:#A8D4FF;"></div>
+        <span class="swatch-lbl">Sky<br>#A8D4FF</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-circle" style="background:#30D158;"></div>
+        <span class="swatch-lbl">Mint Green<br>#30D158</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-circle" style="background:#0F1E3C;"></div>
+        <span class="swatch-lbl">Dark Navy<br>#0F1E3C</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-circle" style="background:#F6F8FB; border: 1px solid #ddd;"></div>
+        <span class="swatch-lbl">Off White<br>#F6F8FB</span>
+      </div>
+    </div>
+
+    <p class="section-label">Typography</p>
+    <div class="type-showcase">
+      <div class="type-card">
+        <p class="type-name">Display Serif</p>
+        <p class="type-sample display">Helm-In</p>
+        <p style="font-family:'DM Mono',monospace; font-size:0.6rem; color:#666; margin-top:0.8rem;">Hero titles
+          and<br>section headings.</p>
+      </div>
+      <div class="type-card">
+        <p class="type-name">Body Sans</p>
+        <p class="type-sample body-font">DM Sans<br>Medium</p>
+        <p style="font-family:'DM Mono',monospace; font-size:0.6rem; color:#666; margin-top:0.8rem;">Body text, UI
+          labels,<br>and buttons.</p>
+      </div>
+      <div class="type-card">
+        <p class="type-name">Mono / Data</p>
+        <p class="type-sample mono-font">Rp123.567<br>QR-0042</p>
+        <p style="font-family:'DM Mono',monospace; font-size:0.6rem; color:#666; margin-top:0.8rem;">Pricing, codes,
+          and<br>transaction data.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <p class="section-label" style="color:rgba(168,212,255,0.5);">03 — Features</p>
+    <h2 class="section-title" style="color: var(--off-white);">Core Capabilities</h2>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <p class="feature-num">F-01</p>
+        <div class="feature-icon">🏠</div>
+        <h3>Seamless Home Screen</h3>
+        <p>A clean, glanceable home dashboard showing your current balance, active rentals, and quick access to nearby
+          helmet stations — everything you need in one view.</p>
+      </div>
+      <div class="feature-card">
+        <p class="feature-num">F-02</p>
+        <div class="feature-icon">📷</div>
+        <h3>Simple Rent Page</h3>
+        <p>Scan the QR code on the Helm-In station locker, confirm the rental, and you're good to go. The entire flow
+          takes under 10 seconds from scan to unlock.</p>
+      </div>
+      <div class="feature-card">
+        <p class="feature-num">F-03</p>
+        <div class="feature-icon">🗺️</div>
+        <h3>Maps of Lockers</h3>
+        <p>An integrated map view showing all Helm-In stations near the BINUS campus, with real-time availability
+          indicators so you always know where to find a helmet.</p>
+      </div>
+      <div class="feature-card">
+        <p class="feature-num">F-04</p>
+        <div class="feature-icon">💳</div>
+        <h3>Easy Top-Up</h3>
+        <p>Add credits through multiple payment methods — BCA debit, GoPay balance, and more. Pricing is transparent:
+          Rp3,000/hr with a Rp30,000/day max. Top up and ride.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCREENS -->
+  <section class="screens-section">
+    <p class="section-label">04 — Screens</p>
+    <h2 class="section-title">Key UI Screens</h2>
+    <p class="screens-desc">Each screen was designed for speed and clarity — a student standing at a locker should be
+      able to complete any action in under 10 seconds.</p>
+
+    <div class="screens-grid">
+      <!-- Home -->
+      <div class="screen-card">
+        <div class="screen-top"></div>
+        <div class="screen-body">
+          <div class="mock-bar title"></div>
+          <div class="mock-balance">
+            <div class="mock-balance-num">Rp123,567</div>
+            <div class="mock-balance-lbl">Your Balance</div>
+          </div>
+          <div class="mock-icon-row">
+            <div class="mock-icon-btn"></div>
+            <div class="mock-icon-btn"></div>
+            <div class="mock-icon-btn"></div>
+            <div class="mock-icon-btn"></div>
+          </div>
+          <div class="mock-bar full"></div>
+          <div class="mock-bar med"></div>
+        </div>
+        <div class="screen-label-box">
+          <span class="screen-label">Home Screen</span>
+        </div>
+      </div>
+
+      <!-- Rent -->
+      <div class="screen-card">
+        <div class="screen-top"></div>
+        <div class="screen-body">
+          <div class="mock-bar title"></div>
+          <div class="mock-bar sub"></div>
+          <div class="mock-qr"></div>
+          <div class="mock-bar short" style="margin: 0 auto;"></div>
+          <div style="height:4px;"></div>
+          <div class="mock-bar med"></div>
+          <div class="mock-bar accent"></div>
+        </div>
+        <div class="screen-label-box">
+          <span class="screen-label">Rent Page</span>
+        </div>
+      </div>
+
+      <!-- Map -->
+      <div class="screen-card">
+        <div class="screen-top"></div>
+        <div class="screen-body">
+          <div class="mock-bar title"></div>
+          <div class="mock-map"></div>
+          <div class="mock-bar full"></div>
+          <div class="mock-bar short"></div>
+        </div>
+        <div class="screen-label-box">
+          <span class="screen-label">Locker Map</span>
+        </div>
+      </div>
+
+      <!-- Top Up -->
+      <div class="screen-card">
+        <div class="screen-top"></div>
+        <div class="screen-body">
+          <div class="mock-bar title"></div>
+          <div class="mock-balance">
+            <div class="mock-balance-num">Rp180,000</div>
+            <div class="mock-balance-lbl">Top Up Amount</div>
+          </div>
+          <div style="height:4px;"></div>
+          <div class="mock-bar full"></div>
+          <div class="mock-bar med"></div>
+          <div class="mock-bar short"></div>
+          <div style="flex:1;"></div>
+          <div class="mock-bar accent"></div>
+        </div>
+        <div class="screen-label-box">
+          <span class="screen-label">Top Up</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AVAILABILITY -->
+  <section class="availability">
+    <div class="avail-badge">
+      <span class="dot"></span>
+      BINUS University Exclusive
+    </div>
+    <h2 class="avail-title">Currently available for<br><em>BINUS University Students</em></h2>
+    <p class="avail-desc">Helm-In is a campus-exclusive service available at BINUS University. Stations are placed at
+      key campus entry points for maximum convenience.</p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="f-brand">HELM<span>-</span>IN</div>
+    <div class="f-tag">
+      Prototype · Personal College Project<br>
+      BINUS University · Smart Mobility<br>
+      Ride Everywhere, Hassle Free.
+    </div>
+  </footer>
 
 </body>
+
 </html>

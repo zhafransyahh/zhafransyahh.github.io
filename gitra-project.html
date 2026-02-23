@@ -1,796 +1,917 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#1C1C1E">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Gitra — Guitar Learning App</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230D0D0C'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Georgia,serif' font-size='16' font-weight='bold' fill='%23C75B39'%3ERZ%3C/text%3E%3C/svg%3E">
-<meta property="og:title" content="Gitra — Guitar Learning App">
-<meta property="og:description" content="UX/UI case study: A mobile app designed to make guitar learning accessible and engaging.">
-<meta property="og:type" content="article">
-<meta property="og:image" content="https://zhafransyahh.github.io/img/Header.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,300&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --amber: #F5A623;
-    --amber-light: #F7C466;
-    --amber-pale: #FFF3D6;
-    --charcoal: #1C1C1E;
-    --charcoal-mid: #2A2A2D;
-    --coral: #E8613A;
-    --off-white: #F8F5F0;
-    --muted: #9B9B9B;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--off-white);
-    color: var(--charcoal);
-    font-family: 'Syne', sans-serif;
-    overflow-x: hidden;
-    -webkit-text-size-adjust: 100%;
-    text-size-adjust: 100%;
-    -webkit-tap-highlight-color: transparent;
-    overscroll-behavior-y: none;
-  }
-
-  /* HERO */
-  .hero {
-    background: var(--charcoal);
-    min-height: 100vh;
-    display: grid;
-    grid-template-rows: 1fr auto;
-    padding: 4.5rem 4rem 3rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero::before {
-    content: '';
-    position: absolute;
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(245,166,35,0.15) 0%, transparent 70%);
-    top: -100px; right: -100px;
-    pointer-events: none;
-  }
-
-  .hero-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    z-index: 1;
-    padding-bottom: 3rem;
-  }
-
-  .hero-eyebrow {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.75rem;
-    color: var(--amber);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.2s;
-  }
-
-  .hero-title {
-    font-family: 'Fraunces', serif;
-    font-weight: 300;
-    font-size: clamp(3.5rem, 8vw, 7rem);
-    line-height: 1.0;
-    color: var(--off-white);
-    margin-bottom: 1.5rem;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.4s;
-  }
-
-  .hero-title em {
-    font-style: italic;
-    color: var(--amber);
-  }
-
-  .hero-desc {
-    font-family: 'Syne', sans-serif;
-    font-size: 1rem;
-    font-weight: 400;
-    color: var(--muted);
-    max-width: 480px;
-    line-height: 1.7;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.6s;
-  }
-
-  .hero-meta {
-    display: flex;
-    gap: 3rem;
-    z-index: 1;
-    padding-top: 2rem;
-    border-top: 1px solid rgba(255,255,255,0.08);
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.8s;
-  }
-
-  .meta-item label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--muted);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    display: block;
-    margin-bottom: 0.3rem;
-  }
-
-  .meta-item span {
-    font-size: 0.9rem;
-    color: var(--off-white);
-    font-weight: 600;
-  }
-
-  /* SECTIONS */
-  section { padding: 6rem 2rem; }
-  section > * { max-width: 1100px; margin-left: auto; margin-right: auto; }
-
-  .section-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--amber);
-    margin-bottom: 1rem;
-  }
-
-  .section-title {
-    font-family: 'Fraunces', serif;
-    font-weight: 300;
-    font-size: clamp(2rem, 4vw, 3rem);
-    line-height: 1.15;
-    margin-bottom: 2rem;
-  }
-
-  /* OVERVIEW */
-  .overview {
-    background: var(--charcoal-mid);
-    color: var(--off-white);
-  }
-
-  .overview-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    margin-top: 3rem;
-  }
-
-  .overview-text p {
-    font-size: 1rem;
-    line-height: 1.8;
-    color: rgba(248,245,240,0.75);
-    margin-bottom: 1rem;
-  }
-
-  .stat-row {
-    display: flex;
-    gap: 2rem;
-    margin-top: 2rem;
-  }
-
-  .stat-box {
-    background: rgba(245,166,35,0.1);
-    border: 1px solid rgba(245,166,35,0.25);
-    border-radius: 12px;
-    padding: 1.5rem;
-    flex: 1;
-  }
-
-  .stat-box .num {
-    font-family: 'Fraunces', serif;
-    font-size: 2.5rem;
-    color: var(--amber);
-    line-height: 1;
-  }
-
-  .stat-box .lbl {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--muted);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-top: 0.5rem;
-  }
-
-  .role-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 1.5rem;
-  }
-
-  .role-chip {
-    background: transparent;
-    border: 1px solid rgba(245,166,35,0.4);
-    color: var(--amber-light);
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    padding: 0.4rem 0.9rem;
-    border-radius: 100px;
-    letter-spacing: 0.08em;
-  }
-
-  /* VISUAL DIRECTION */
-  .visual-dir {
-    background: var(--off-white);
-  }
-
-  .color-palette {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
-    flex-wrap: wrap;
-  }
-
-  .color-swatch {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .swatch-circle {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-  }
-
-  .swatch-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.6rem;
-    color: var(--muted);
-    text-align: center;
-  }
-
-  .type-showcase {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    margin-top: 2rem;
-  }
-
-  .type-card {
-    background: var(--charcoal);
-    border-radius: 16px;
-    padding: 2rem;
-    color: var(--off-white);
-  }
-
-  .type-name {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.6rem;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    margin-bottom: 0.8rem;
-  }
-
-  .type-sample { line-height: 1.3; }
-  .type-sample.poppins { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 700; }
-  .type-sample.playfair { font-family: 'Fraunces', serif; font-weight: 300; font-size: 1.8rem; font-style: italic; }
-  .type-sample.mono { font-family: 'DM Mono', monospace; font-size: 1.4rem; }
-
-  /* FEATURES */
-  .features {
-    background: var(--charcoal);
-    color: var(--off-white);
-  }
-
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin-top: 3rem;
-  }
-
-  .feature-card {
-    background: var(--charcoal-mid);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 20px;
-    padding: 2rem;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.3s ease, border-color 0.3s ease;
-  }
-
-  .feature-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(245,166,35,0.3);
-  }
-
-  .feature-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(245,166,35,0.05) 0%, transparent 60%);
-    pointer-events: none;
-  }
-
-  .feature-num {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--amber);
-    letter-spacing: 0.15em;
-    margin-bottom: 1rem;
-  }
-
-  .feature-icon {
-    width: 48px;
-    height: 48px;
-    background: rgba(245,166,35,0.1);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.4rem;
-    margin-bottom: 1.2rem;
-  }
-
-  .feature-card h3 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 0.6rem;
-    color: var(--off-white);
-  }
-
-  .feature-card p {
-    font-size: 0.85rem;
-    color: var(--muted);
-    line-height: 1.7;
-  }
-
-  /* WIREFRAMES */
-  .wireframes {
-    background: var(--amber-pale);
-  }
-
-  .wireframe-desc {
-    font-size: 1rem;
-    line-height: 1.8;
-    color: rgba(28,28,30,0.7);
-    max-width: 640px;
-    margin-bottom: 3rem;
-  }
-
-  .screens-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
-  }
-
-  .screen-card {
-    background: white;
-    border-radius: 20px;
-    aspect-ratio: 9/16;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 1.2rem;
-    box-shadow: 0 8px 32px rgba(28,28,30,0.1);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .screen-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 20px;
-    border: 2px solid rgba(245,166,35,0.15);
-  }
-
-  .screen-mockup {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 8px;
-    padding: 1.5rem;
-  }
-
-  .mock-bar {
-    background: var(--amber-pale);
-    border-radius: 4px;
-    height: 10px;
-    width: 100%;
-  }
-
-  .mock-bar.short { width: 60%; }
-  .mock-bar.med { width: 80%; }
-  .mock-bar.accent { background: var(--amber); height: 8px; width: 40%; }
-  .mock-circle {
-    width: 60px; height: 60px;
-    background: var(--amber);
-    border-radius: 50%;
-    opacity: 0.3;
-  }
-  .mock-chord {
-    width: 80%;
-    aspect-ratio: 3/4;
-    border: 2px solid var(--charcoal);
-    border-radius: 8px;
-    display: grid;
-    grid-template-columns: repeat(6,1fr);
-    padding: 6px;
-    gap: 2px;
-  }
-  .mock-string { background: var(--charcoal); border-radius: 2px; opacity: 0.2; }
-  .mock-dot {
-    width: 10px; height: 10px;
-    background: var(--coral);
-    border-radius: 50%;
-    margin: auto;
-    grid-column: 2;
-  }
-
-  .screen-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-    position: relative;
-    z-index: 1;
-  }
-
-  /* APP ICON */
-  .icon-evolution {
-    background: var(--charcoal-mid);
-    color: var(--off-white);
-  }
-
-  .icon-row {
-    display: flex;
-    align-items: center;
-    gap: 3rem;
-    margin-top: 2.5rem;
-    flex-wrap: wrap;
-  }
-
-  .app-icon-card {
-    text-align: center;
-  }
-
-  .app-icon-visual {
-    width: 96px;
-    height: 96px;
-    border-radius: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.5rem;
-    margin: 0 auto 0.8rem;
-  }
-
-  .app-icon-visual.v1 { background: #2A2A2D; border: 2px solid rgba(245,166,35,0.3); }
-  .app-icon-visual.v2 { background: var(--amber); }
-
-  .app-icon-card .ver {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--muted);
-    letter-spacing: 0.12em;
-  }
-
-  .arrow-evolve {
-    font-size: 2rem;
-    color: rgba(245,166,35,0.4);
-  }
-
-  .icon-note {
-    font-size: 0.9rem;
-    color: rgba(248,245,240,0.6);
-    line-height: 1.7;
-    max-width: 480px;
-  }
-
-  /* FOOTER */
-  footer {
-    background: var(--charcoal);
-    padding: 3rem 4rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid rgba(255,255,255,0.06);
-  }
-
-  footer .f-title {
-    font-family: 'Fraunces', serif;
-    font-weight: 300;
-    font-size: 1.5rem;
-    color: var(--amber);
-    font-style: italic;
-  }
-
-  footer .f-meta {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--muted);
-    text-align: right;
-    line-height: 1.8;
-    letter-spacing: 0.1em;
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @media (max-width: 768px) {
-    section { padding: 4rem 1.5rem; }
-    .hero { padding: 4rem 1.5rem 2rem; }
-    .hero-meta { gap: 1.5rem; }
-    .overview-grid, .type-showcase, .features-grid, .screens-grid { grid-template-columns: 1fr; }
-    .stat-row { flex-direction: column; }
-    footer { flex-direction: column; gap: 1rem; text-align: center; }
-    footer .f-meta { text-align: center; }
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1C1C1E">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Gitra — Guitar Learning App</title>
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230D0D0C'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Georgia,serif' font-size='16' font-weight='bold' fill='%23C75B39'%3ERZ%3C/text%3E%3C/svg%3E">
+  <meta property="og:title" content="Gitra — Guitar Learning App">
+  <meta property="og:description"
+    content="UX/UI case study: A mobile app designed to make guitar learning accessible and engaging.">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://zhafransyahh.github.io/img/Header.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,300&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --amber: #F5A623;
+      --amber-light: #F7C466;
+      --amber-pale: #FFF3D6;
+      --charcoal: #1C1C1E;
+      --charcoal-mid: #2A2A2D;
+      --coral: #E8613A;
+      --off-white: #F8F5F0;
+      --muted: #9B9B9B;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--off-white);
+      color: var(--charcoal);
+      font-family: 'Syne', sans-serif;
+      overflow-x: hidden;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      -webkit-tap-highlight-color: transparent;
+      overscroll-behavior-y: none;
+    }
+
+    /* HERO */
+    .hero {
+      background: var(--charcoal);
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      padding: 4.5rem 4rem 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(245, 166, 35, 0.15) 0%, transparent 70%);
+      top: -100px;
+      right: -100px;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      z-index: 1;
+      padding-bottom: 3rem;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--amber);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.2s;
+    }
+
+    .hero-title {
+      font-family: 'Fraunces', serif;
+      font-weight: 300;
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      line-height: 1.0;
+      color: var(--off-white);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.4s;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--amber);
+    }
+
+    .hero-desc {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--muted);
+      max-width: 480px;
+      line-height: 1.7;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.6s;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 3rem;
+      z-index: 1;
+      padding-top: 2rem;
+      margin-bottom: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.8s;
+    }
+
+    .meta-item label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .meta-item span {
+      font-size: 0.9rem;
+      color: var(--off-white);
+      font-weight: 600;
+    }
+
+    /* SECTIONS */
+    section {
+      padding: 6rem 2rem;
+    }
+
+    section>* {
+      max-width: 1100px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-weight: 300;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.15;
+      margin-bottom: 2rem;
+    }
+
+    /* OVERVIEW */
+    .overview {
+      background: var(--charcoal-mid);
+      color: var(--off-white);
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      margin-top: 3rem;
+    }
+
+    .overview-text p {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: rgba(248, 245, 240, 0.75);
+      margin-bottom: 1rem;
+    }
+
+    .stat-row {
+      display: flex;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .stat-box {
+      background: rgba(245, 166, 35, 0.1);
+      border: 1px solid rgba(245, 166, 35, 0.25);
+      border-radius: 12px;
+      padding: 1.5rem;
+      flex: 1;
+    }
+
+    .stat-box .num {
+      font-family: 'Fraunces', serif;
+      font-size: 2.5rem;
+      color: var(--amber);
+      line-height: 1;
+    }
+
+    .stat-box .lbl {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 0.5rem;
+    }
+
+    .role-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .role-chip {
+      background: transparent;
+      border: 1px solid rgba(245, 166, 35, 0.4);
+      color: var(--amber-light);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.4rem 0.9rem;
+      border-radius: 100px;
+      letter-spacing: 0.08em;
+    }
+
+    /* VISUAL DIRECTION */
+    .visual-dir {
+      background: var(--off-white);
+    }
+
+    .color-palette {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .color-swatch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .swatch-circle {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .swatch-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .type-showcase {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .type-card {
+      background: var(--charcoal);
+      border-radius: 16px;
+      padding: 2rem;
+      color: var(--off-white);
+    }
+
+    .type-name {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.8rem;
+    }
+
+    .type-sample {
+      line-height: 1.3;
+    }
+
+    .type-sample.poppins {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .type-sample.playfair {
+      font-family: 'Fraunces', serif;
+      font-weight: 300;
+      font-size: 1.8rem;
+      font-style: italic;
+    }
+
+    .type-sample.mono {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.4rem;
+    }
+
+    /* FEATURES */
+    .features {
+      background: var(--charcoal);
+      color: var(--off-white);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .feature-card {
+      background: var(--charcoal-mid);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(245, 166, 35, 0.3);
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(245, 166, 35, 0.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .feature-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--amber);
+      letter-spacing: 0.15em;
+      margin-bottom: 1rem;
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(245, 166, 35, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+      color: var(--off-white);
+    }
+
+    .feature-card p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* WIREFRAMES */
+    .wireframes {
+      background: var(--amber-pale);
+    }
+
+    .wireframe-desc {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: rgba(28, 28, 30, 0.7);
+      max-width: 640px;
+      margin-bottom: 3rem;
+    }
+
+    .screens-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+
+    .screen-card {
+      background: white;
+      border-radius: 20px;
+      aspect-ratio: 9/16;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.2rem;
+      box-shadow: 0 8px 32px rgba(28, 28, 30, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .screen-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      border: 2px solid rgba(245, 166, 35, 0.15);
+    }
+
+    .screen-mockup {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+      padding: 1.5rem;
+    }
+
+    .mock-bar {
+      background: var(--amber-pale);
+      border-radius: 4px;
+      height: 10px;
+      width: 100%;
+    }
+
+    .mock-bar.short {
+      width: 60%;
+    }
+
+    .mock-bar.med {
+      width: 80%;
+    }
+
+    .mock-bar.accent {
+      background: var(--amber);
+      height: 8px;
+      width: 40%;
+    }
+
+    .mock-circle {
+      width: 60px;
+      height: 60px;
+      background: var(--amber);
+      border-radius: 50%;
+      opacity: 0.3;
+    }
+
+    .mock-chord {
+      width: 80%;
+      aspect-ratio: 3/4;
+      border: 2px solid var(--charcoal);
+      border-radius: 8px;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      padding: 6px;
+      gap: 2px;
+    }
+
+    .mock-string {
+      background: var(--charcoal);
+      border-radius: 2px;
+      opacity: 0.2;
+    }
+
+    .mock-dot {
+      width: 10px;
+      height: 10px;
+      background: var(--coral);
+      border-radius: 50%;
+      margin: auto;
+      grid-column: 2;
+    }
+
+    .screen-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* APP ICON */
+    .icon-evolution {
+      background: var(--charcoal-mid);
+      color: var(--off-white);
+    }
+
+    .icon-row {
+      display: flex;
+      align-items: center;
+      gap: 3rem;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    .app-icon-card {
+      text-align: center;
+    }
+
+    .app-icon-visual {
+      width: 96px;
+      height: 96px;
+      border-radius: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      margin: 0 auto 0.8rem;
+    }
+
+    .app-icon-visual.v1 {
+      background: #2A2A2D;
+      border: 2px solid rgba(245, 166, 35, 0.3);
+    }
+
+    .app-icon-visual.v2 {
+      background: var(--amber);
+    }
+
+    .app-icon-card .ver {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+    }
+
+    .arrow-evolve {
+      font-size: 2rem;
+      color: rgba(245, 166, 35, 0.4);
+    }
+
+    .icon-note {
+      font-size: 0.9rem;
+      color: rgba(248, 245, 240, 0.6);
+      line-height: 1.7;
+      max-width: 480px;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--charcoal);
+      padding: 3rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    footer .f-title {
+      font-family: 'Fraunces', serif;
+      font-weight: 300;
+      font-size: 1.5rem;
+      color: var(--amber);
+      font-style: italic;
+    }
+
+    footer .f-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      text-align: right;
+      line-height: 1.8;
+      letter-spacing: 0.1em;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      section {
+        padding: 4rem 1.5rem;
+      }
+
+      .hero {
+        padding: 4rem 1.5rem 2rem;
+      }
+
+      .hero-meta {
+        gap: 1.5rem;
+      }
+
+      .overview-grid,
+      .type-showcase,
+      .features-grid,
+      .screens-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stat-row {
+        flex-direction: column;
+      }
+
+      footer {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+
+      footer .f-meta {
+        text-align: center;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- SITE NAV -->
-<nav style="position:fixed;top:0;left:0;right:0;z-index:100;padding:0.75rem 2rem;display:flex;justify-content:space-between;align-items:center;background:rgba(28,28,30,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.06);font-family:'DM Mono',monospace;">
-    <a href="index.html" style="font-family:'DM Mono',monospace;font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(248,245,240,0.5);text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;transition:color 0.3s;"
-       onmouseover="this.style.color='#F5A623'" onmouseout="this.style.color='rgba(248,245,240,0.5)'">&larr; Back to portfolio</a>
-    <a href="index.html" style="font-family:'DM Mono',monospace;font-size:0.6875rem;letter-spacing:-0.02em;color:rgba(248,245,240,0.7);text-decoration:none;">R<span style="color:#F5A623;">.</span>Z</a>
-</nav>
-<div style="height:44px;background:#1C1C1E;"></div>
+  <!-- SITE NAV -->
+  <nav
+    style="position:fixed;top:0;left:0;right:0;z-index:100;padding:0.75rem 2rem;display:flex;justify-content:space-between;align-items:center;background:rgba(28,28,30,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.06);font-family:'DM Mono',monospace;">
+    <a href="index.html"
+      style="font-family:'DM Mono',monospace;font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(248,245,240,0.5);text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;transition:color 0.3s;"
+      onmouseover="this.style.color='#F5A623'" onmouseout="this.style.color='rgba(248,245,240,0.5)'">&larr; Back to
+      portfolio</a>
+    <a href="index.html"
+      style="font-family:'DM Mono',monospace;font-size:0.6875rem;letter-spacing:-0.02em;color:rgba(248,245,240,0.7);text-decoration:none;">R<span
+        style="color:#F5A623;">.</span>Z</a>
+  </nav>
+  <div style="height:44px;background:#1C1C1E;"></div>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-content">
-    <p class="hero-eyebrow">UX / UI Case Study</p>
-    <h1 class="hero-title"><em>Gitra</em></h1>
-    <p class="hero-desc">A mobile application designed to make guitar learning accessible, intuitive, and enjoyable — from beginner chords to expert technique.</p>
-  </div>
-  <div class="hero-meta">
-    <div class="meta-item">
-      <label>Platform</label>
-      <span>iOS / Android</span>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <p class="hero-eyebrow">UX / UI Case Study</p>
+      <h1 class="hero-title"><em>Gitra</em></h1>
+      <p class="hero-desc">A mobile application designed to make guitar learning accessible, intuitive, and enjoyable —
+        from beginner chords to expert technique.</p>
     </div>
-    <div class="meta-item">
-      <label>Discipline</label>
-      <span>UX Research · UI Design</span>
-    </div>
-    <div class="meta-item">
-      <label>Deliverable</label>
-      <span>Mobile App · TestFlight Beta</span>
-    </div>
-    <div class="meta-item">
-      <label>Type</label>
-      <span>End-to-End Product Design</span>
-    </div>
-  </div>
-</section>
-
-<!-- OVERVIEW -->
-<section class="overview">
-  <p class="section-label">01 — Overview</p>
-  <h2 class="section-title">What is Gitra?</h2>
-  <div class="overview-grid">
-    <div class="overview-text">
-      <p>Gitra is a mobile guitar learning application built for aspiring musicians who want to learn at their own pace. The app bridges the gap between costly private lessons and the overwhelming nature of YouTube tutorials, offering a structured, self-guided learning experience.</p>
-      <p>The product focuses on three core pillars: chord discovery, guided learning materials, and real-time tuning assistance — all wrapped in a warm, approachable UI that encourages consistent practice.</p>
-      <div class="role-list">
-        <span class="role-chip">Product Design</span>
-        <span class="role-chip">User Research</span>
-        <span class="role-chip">Wireframing</span>
-        <span class="role-chip">Visual Design</span>
-        <span class="role-chip">Prototyping</span>
-        <span class="role-chip">TestFlight Beta</span>
+    <div class="hero-meta">
+      <div class="meta-item">
+        <label>Platform</label>
+        <span>iOS / Android</span>
+      </div>
+      <div class="meta-item">
+        <label>Discipline</label>
+        <span>UX Research · UI Design</span>
+      </div>
+      <div class="meta-item">
+        <label>Deliverable</label>
+        <span>Mobile App · TestFlight Beta</span>
+      </div>
+      <div class="meta-item">
+        <label>Type</label>
+        <span>End-to-End Product Design</span>
       </div>
     </div>
-    <div>
-      <div class="stat-row">
-        <div class="stat-box">
-          <div class="num">3</div>
-          <div class="lbl">Core Features</div>
-        </div>
-        <div class="stat-box">
-          <div class="num">2.0</div>
-          <div class="lbl">Icon Versions</div>
+  </section>
+
+  <!-- OVERVIEW -->
+  <section class="overview">
+    <p class="section-label">01 — Overview</p>
+    <h2 class="section-title">What is Gitra?</h2>
+    <div class="overview-grid">
+      <div class="overview-text">
+        <p>Gitra is a mobile guitar learning application built for aspiring musicians who want to learn at their own
+          pace. The app bridges the gap between costly private lessons and the overwhelming nature of YouTube tutorials,
+          offering a structured, self-guided learning experience.</p>
+        <p>The product focuses on three core pillars: chord discovery, guided learning materials, and real-time tuning
+          assistance — all wrapped in a warm, approachable UI that encourages consistent practice.</p>
+        <div class="role-list">
+          <span class="role-chip">Product Design</span>
+          <span class="role-chip">User Research</span>
+          <span class="role-chip">Wireframing</span>
+          <span class="role-chip">Visual Design</span>
+          <span class="role-chip">Prototyping</span>
+          <span class="role-chip">TestFlight Beta</span>
         </div>
       </div>
-      <div class="stat-row">
-        <div class="stat-box">
-          <div class="num">iOS</div>
-          <div class="lbl">Primary Platform</div>
+      <div>
+        <div class="stat-row">
+          <div class="stat-box">
+            <div class="num">3</div>
+            <div class="lbl">Core Features</div>
+          </div>
+          <div class="stat-box">
+            <div class="num">2.0</div>
+            <div class="lbl">Icon Versions</div>
+          </div>
         </div>
-        <div class="stat-box">
-          <div class="num">TF</div>
-          <div class="lbl">Beta via TestFlight</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- VISUAL DIRECTION -->
-<section class="visual-dir">
-  <p class="section-label">02 — Visual Direction</p>
-  <h2 class="section-title">Design Language</h2>
-
-  <div style="margin-bottom: 3rem;">
-    <p style="color: rgba(28,28,30,0.65); font-size:0.95rem; line-height:1.8; max-width:640px; margin-bottom:2rem;">The visual identity of Gitra draws from warmth and clarity. Amber tones evoke the natural wood of acoustic guitars, while deep charcoals provide focus and contrast for long practice sessions.</p>
-
-    <p class="section-label" style="margin-top:2rem;">Color Palette</p>
-    <div class="color-palette">
-      <div class="color-swatch">
-        <div class="swatch-circle" style="background:#F5A623;"></div>
-        <span class="swatch-label">Primary Amber<br>#F5A623</span>
-      </div>
-      <div class="color-swatch">
-        <div class="swatch-circle" style="background:#F7C466;"></div>
-        <span class="swatch-label">Amber Light<br>#F7C466</span>
-      </div>
-      <div class="color-swatch">
-        <div class="swatch-circle" style="background:#E8613A;"></div>
-        <span class="swatch-label">Coral Accent<br>#E8613A</span>
-      </div>
-      <div class="color-swatch">
-        <div class="swatch-circle" style="background:#FFE4C4; border: 1px solid #ddd;"></div>
-        <span class="swatch-label">Skin Neutral<br>#FFE4C4</span>
-      </div>
-      <div class="color-swatch">
-        <div class="swatch-circle" style="background:#1C1C1E;"></div>
-        <span class="swatch-label">Charcoal<br>#1C1C1E</span>
-      </div>
-      <div class="color-swatch">
-        <div class="swatch-circle" style="background:#9B9B9B;"></div>
-        <span class="swatch-label">Muted Gray<br>#9B9B9B</span>
-      </div>
-      <div class="color-swatch">
-        <div class="swatch-circle" style="background:#F8F5F0; border: 1px solid #ddd;"></div>
-        <span class="swatch-label">Off-White<br>#F8F5F0</span>
-      </div>
-    </div>
-  </div>
-
-  <p class="section-label">Typography</p>
-  <div class="type-showcase">
-    <div class="type-card">
-      <p class="type-name">Headline Font</p>
-      <p class="type-sample poppins">Poppins<br>Bold</p>
-      <p style="font-family:'DM Mono',monospace; font-size:0.6rem; color:#666; margin-top:0.8rem;">Used for headings, titles,<br>and prominent UI text.</p>
-    </div>
-    <div class="type-card">
-      <p class="type-name">Display Serif</p>
-      <p class="type-sample playfair">Playfair<br>Light Italic</p>
-      <p style="font-family:'DM Mono',monospace; font-size:0.6rem; color:#666; margin-top:0.8rem;">Feature titles and<br>editorial moments.</p>
-    </div>
-    <div class="type-card">
-      <p class="type-name">Mono / Caption</p>
-      <p class="type-sample mono">Aa Bb Cc<br>0123456789</p>
-      <p style="font-family:'DM Mono',monospace; font-size:0.6rem; color:#666; margin-top:0.8rem;">Labels, metadata,<br>and numeric displays.</p>
-    </div>
-  </div>
-</section>
-
-<!-- FEATURES -->
-<section class="features">
-  <p class="section-label">03 — Features</p>
-  <h2 class="section-title" style="color: var(--off-white);">Core Capabilities</h2>
-
-  <div class="features-grid">
-    <div class="feature-card">
-      <p class="feature-num">F-01</p>
-      <div class="feature-icon">🎸</div>
-      <h3>Chord Search</h3>
-      <p>Easily search any guitar chord, hassle-free. Browse chord libraries by key, difficulty, or song — with visual fingering diagrams that are clear and immediately actionable.</p>
-    </div>
-    <div class="feature-card">
-      <p class="feature-num">F-02</p>
-      <div class="feature-icon">📖</div>
-      <h3>Learning Materials</h3>
-      <p>Structured, accessible learning modules designed for all levels. Gitra provides guided exercises, theory basics, and practice tracks — so users always know what to do next.</p>
-    </div>
-    <div class="feature-card">
-      <p class="feature-num">F-03</p>
-      <div class="feature-icon">🎵</div>
-      <h3>Automatic Tuner</h3>
-      <p>Built-in chromatic tuner using the device microphone. Real-time visual feedback makes tuning fast and accurate before every practice session — no separate app needed.</p>
-    </div>
-  </div>
-</section>
-
-<!-- WIREFRAMES -->
-<section class="wireframes">
-  <p class="section-label">04 — Wireframes</p>
-  <h2 class="section-title">Screen Architecture</h2>
-  <p class="wireframe-desc">Before applying visual design, the information architecture and user flows were mapped through low-fidelity wireframes. These explored different layouts for each primary feature, identifying the most intuitive structure before committing to high-fidelity design.</p>
-
-  <div class="screens-grid">
-    <div class="screen-card">
-      <div class="screen-mockup">
-        <div class="mock-bar accent"></div>
-        <div class="mock-bar short"></div>
-        <div class="mock-bar med"></div>
-        <div class="mock-bar"></div>
-        <div class="mock-bar short"></div>
-      </div>
-      <span class="screen-label">Onboarding</span>
-    </div>
-    <div class="screen-card">
-      <div class="screen-mockup">
-        <div class="mock-bar med"></div>
-        <div class="mock-bar accent"></div>
-        <div class="mock-chord">
-          <div class="mock-string"></div>
-          <div class="mock-string"></div>
-          <div class="mock-string"></div>
-          <div class="mock-string"></div>
-          <div class="mock-string"></div>
-          <div class="mock-string"></div>
+        <div class="stat-row">
+          <div class="stat-box">
+            <div class="num">iOS</div>
+            <div class="lbl">Primary Platform</div>
+          </div>
+          <div class="stat-box">
+            <div class="num">TF</div>
+            <div class="lbl">Beta via TestFlight</div>
+          </div>
         </div>
       </div>
-      <span class="screen-label">C Major Chord</span>
     </div>
-    <div class="screen-card">
-      <div class="screen-mockup">
-        <div class="mock-bar"></div>
-        <div class="mock-bar short"></div>
-        <div class="mock-bar med"></div>
-        <div class="mock-bar accent"></div>
-        <div class="mock-bar"></div>
-        <div class="mock-bar short"></div>
+  </section>
+
+  <!-- VISUAL DIRECTION -->
+  <section class="visual-dir">
+    <p class="section-label">02 — Visual Direction</p>
+    <h2 class="section-title">Design Language</h2>
+
+    <div style="margin-bottom: 3rem;">
+      <p style="color: rgba(28,28,30,0.65); font-size:0.95rem; line-height:1.8; max-width:640px; margin-bottom:2rem;">
+        The visual identity of Gitra draws from warmth and clarity. Amber tones evoke the natural wood of acoustic
+        guitars, while deep charcoals provide focus and contrast for long practice sessions.</p>
+
+      <p class="section-label" style="margin-top:2rem;">Color Palette</p>
+      <div class="color-palette">
+        <div class="color-swatch">
+          <div class="swatch-circle" style="background:#F5A623;"></div>
+          <span class="swatch-label">Primary Amber<br>#F5A623</span>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-circle" style="background:#F7C466;"></div>
+          <span class="swatch-label">Amber Light<br>#F7C466</span>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-circle" style="background:#E8613A;"></div>
+          <span class="swatch-label">Coral Accent<br>#E8613A</span>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-circle" style="background:#FFE4C4; border: 1px solid #ddd;"></div>
+          <span class="swatch-label">Skin Neutral<br>#FFE4C4</span>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-circle" style="background:#1C1C1E;"></div>
+          <span class="swatch-label">Charcoal<br>#1C1C1E</span>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-circle" style="background:#9B9B9B;"></div>
+          <span class="swatch-label">Muted Gray<br>#9B9B9B</span>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-circle" style="background:#F8F5F0; border: 1px solid #ddd;"></div>
+          <span class="swatch-label">Off-White<br>#F8F5F0</span>
+        </div>
       </div>
-      <span class="screen-label">Lesson View</span>
     </div>
-    <div class="screen-card">
-      <div class="screen-mockup">
-        <div class="mock-circle"></div>
-        <div class="mock-bar accent" style="width:30%;"></div>
-        <div class="mock-bar short"></div>
-        <div class="mock-bar med"></div>
+
+    <p class="section-label">Typography</p>
+    <div class="type-showcase">
+      <div class="type-card">
+        <p class="type-name">Headline Font</p>
+        <p class="type-sample poppins">Poppins<br>Bold</p>
+        <p style="font-family:'DM Mono',monospace; font-size:0.6rem; color:#666; margin-top:0.8rem;">Used for headings,
+          titles,<br>and prominent UI text.</p>
       </div>
-      <span class="screen-label">Auto Tuner</span>
+      <div class="type-card">
+        <p class="type-name">Display Serif</p>
+        <p class="type-sample playfair">Playfair<br>Light Italic</p>
+        <p style="font-family:'DM Mono',monospace; font-size:0.6rem; color:#666; margin-top:0.8rem;">Feature titles
+          and<br>editorial moments.</p>
+      </div>
+      <div class="type-card">
+        <p class="type-name">Mono / Caption</p>
+        <p class="type-sample mono">Aa Bb Cc<br>0123456789</p>
+        <p style="font-family:'DM Mono',monospace; font-size:0.6rem; color:#666; margin-top:0.8rem;">Labels,
+          metadata,<br>and numeric displays.</p>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- APP ICON -->
-<section class="icon-evolution">
-  <p class="section-label">05 — App Icon</p>
-  <h2 class="section-title" style="color: var(--off-white);">Identity Evolution</h2>
+  <!-- FEATURES -->
+  <section class="features">
+    <p class="section-label">03 — Features</p>
+    <h2 class="section-title" style="color: var(--off-white);">Core Capabilities</h2>
 
-  <div class="icon-row">
-    <div class="app-icon-card">
-      <div class="app-icon-visual v1">🎸</div>
-      <p class="ver">v1.0 — Initial</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <p class="feature-num">F-01</p>
+        <div class="feature-icon">🎸</div>
+        <h3>Chord Search</h3>
+        <p>Easily search any guitar chord, hassle-free. Browse chord libraries by key, difficulty, or song — with visual
+          fingering diagrams that are clear and immediately actionable.</p>
+      </div>
+      <div class="feature-card">
+        <p class="feature-num">F-02</p>
+        <div class="feature-icon">📖</div>
+        <h3>Learning Materials</h3>
+        <p>Structured, accessible learning modules designed for all levels. Gitra provides guided exercises, theory
+          basics, and practice tracks — so users always know what to do next.</p>
+      </div>
+      <div class="feature-card">
+        <p class="feature-num">F-03</p>
+        <div class="feature-icon">🎵</div>
+        <h3>Automatic Tuner</h3>
+        <p>Built-in chromatic tuner using the device microphone. Real-time visual feedback makes tuning fast and
+          accurate before every practice session — no separate app needed.</p>
+      </div>
     </div>
-    <div class="arrow-evolve">→</div>
-    <div class="app-icon-card">
-      <div class="app-icon-visual v2">🎸</div>
-      <p class="ver" style="color: var(--amber);">v2.0 — Refined</p>
-    </div>
-    <p class="icon-note">The app icon evolved from a dark, subdued treatment to a bold amber identity — reflecting the app's warmth and approachability. The updated icon communicates confidence and energy at a glance, aligning with Gitra's mission to invite, not intimidate.</p>
-  </div>
-</section>
+  </section>
 
-<!-- FOOTER -->
-<footer>
-  <div class="f-title">Gitra</div>
-  <div class="f-meta">
-    UX / UI Case Study<br>
-    Available on TestFlight · iOS Platform<br>
-    Everyone can learn guitar.
-  </div>
-</footer>
+  <!-- WIREFRAMES -->
+  <section class="wireframes">
+    <p class="section-label">04 — Wireframes</p>
+    <h2 class="section-title">Screen Architecture</h2>
+    <p class="wireframe-desc">Before applying visual design, the information architecture and user flows were mapped
+      through low-fidelity wireframes. These explored different layouts for each primary feature, identifying the most
+      intuitive structure before committing to high-fidelity design.</p>
+
+    <div class="screens-grid">
+      <div class="screen-card">
+        <div class="screen-mockup">
+          <div class="mock-bar accent"></div>
+          <div class="mock-bar short"></div>
+          <div class="mock-bar med"></div>
+          <div class="mock-bar"></div>
+          <div class="mock-bar short"></div>
+        </div>
+        <span class="screen-label">Onboarding</span>
+      </div>
+      <div class="screen-card">
+        <div class="screen-mockup">
+          <div class="mock-bar med"></div>
+          <div class="mock-bar accent"></div>
+          <div class="mock-chord">
+            <div class="mock-string"></div>
+            <div class="mock-string"></div>
+            <div class="mock-string"></div>
+            <div class="mock-string"></div>
+            <div class="mock-string"></div>
+            <div class="mock-string"></div>
+          </div>
+        </div>
+        <span class="screen-label">C Major Chord</span>
+      </div>
+      <div class="screen-card">
+        <div class="screen-mockup">
+          <div class="mock-bar"></div>
+          <div class="mock-bar short"></div>
+          <div class="mock-bar med"></div>
+          <div class="mock-bar accent"></div>
+          <div class="mock-bar"></div>
+          <div class="mock-bar short"></div>
+        </div>
+        <span class="screen-label">Lesson View</span>
+      </div>
+      <div class="screen-card">
+        <div class="screen-mockup">
+          <div class="mock-circle"></div>
+          <div class="mock-bar accent" style="width:30%;"></div>
+          <div class="mock-bar short"></div>
+          <div class="mock-bar med"></div>
+        </div>
+        <span class="screen-label">Auto Tuner</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- APP ICON -->
+  <section class="icon-evolution">
+    <p class="section-label">05 — App Icon</p>
+    <h2 class="section-title" style="color: var(--off-white);">Identity Evolution</h2>
+
+    <div class="icon-row">
+      <div class="app-icon-card">
+        <div class="app-icon-visual v1">🎸</div>
+        <p class="ver">v1.0 — Initial</p>
+      </div>
+      <div class="arrow-evolve">→</div>
+      <div class="app-icon-card">
+        <div class="app-icon-visual v2">🎸</div>
+        <p class="ver" style="color: var(--amber);">v2.0 — Refined</p>
+      </div>
+      <p class="icon-note">The app icon evolved from a dark, subdued treatment to a bold amber identity — reflecting the
+        app's warmth and approachability. The updated icon communicates confidence and energy at a glance, aligning with
+        Gitra's mission to invite, not intimidate.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="f-title">Gitra</div>
+    <div class="f-meta">
+      UX / UI Case Study<br>
+      Available on TestFlight · iOS Platform<br>
+      Everyone can learn guitar.
+    </div>
+  </footer>
 
 </body>
+
 </html>

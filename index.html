@@ -87,7 +87,7 @@
             <div class="timeline">
 
                 <!-- JULO PM Channeling & Funding -->
-                <article class="timeline__item reveal">
+                <article class="timeline__item reveal reveal-delay-1">
                     <div class="timeline__marker"></div>
                     <div class="timeline__content">
                         <div class="timeline__header">
@@ -118,7 +118,7 @@
                 </article>
 
                 <!-- JULO PM Onboarding & KYC -->
-                <article class="timeline__item reveal">
+                <article class="timeline__item reveal reveal-delay-2">
                     <div class="timeline__marker timeline__marker--secondary"></div>
                     <div class="timeline__content">
                         <div class="timeline__header">
@@ -147,7 +147,7 @@
                 </article>
 
                 <!-- JULO APM -->
-                <article class="timeline__item reveal">
+                <article class="timeline__item reveal reveal-delay-3">
                     <div class="timeline__marker timeline__marker--secondary"></div>
                     <div class="timeline__content">
                         <div class="timeline__header">
@@ -235,7 +235,7 @@
         <div class="container">
             <div class="section__label reveal">03 / Selected Work</div>
             <div class="work__grid">
-                <a class="work__item reveal" href="gitra-project.html">
+                <a class="work__item reveal reveal-delay-1" href="gitra-project.html">
                     <div class="work__thumb-wrapper">
                         <img src="img/Header.png" alt="Gitra — Guitar Learning App" class="work__thumb" loading="lazy">
                     </div>
@@ -251,7 +251,7 @@
                         <span class="work__arrow">View project &rarr;</span>
                     </div>
                 </a>
-                <a class="work__item reveal" href="jurnal-kamu-project.html">
+                <a class="work__item reveal reveal-delay-2" href="jurnal-kamu-project.html">
                     <div class="work__thumb-wrapper">
                         <img src="img/JurnalKamuThumbnail.png" alt="JurnalKamu — Mental Health Journal" class="work__thumb" loading="lazy">
                     </div>
@@ -267,7 +267,7 @@
                         <span class="work__arrow">View project &rarr;</span>
                     </div>
                 </a>
-                <a class="work__item reveal" href="helm-in-project.html">
+                <a class="work__item reveal reveal-delay-3" href="helm-in-project.html">
                     <div class="work__thumb-wrapper">
                         <img src="img/portfolioThumb1.png" alt="Helm-In — Smart Helmet Rental" class="work__thumb work__thumb--contain" loading="lazy">
                     </div>
@@ -417,6 +417,16 @@
     </footer>
 
     <script>
+        // Nav background on scroll
+        const scrollNav = document.querySelector('.nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                scrollNav.classList.add('nav--scrolled');
+            } else {
+                scrollNav.classList.remove('nav--scrolled');
+            }
+        }, { passive: true });
+
         // Scroll reveal
         const revealElements = document.querySelectorAll('.reveal');
         const revealObserver = new IntersectionObserver((entries) => {
