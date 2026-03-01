@@ -435,9 +435,9 @@ img {
 
 @media (min-width: 768px) {
     .about__grid {
-        grid-template-columns: clamp(220px, 28%, 360px) 1fr;
+        grid-template-columns: 1fr 1fr;
         gap: 4rem;
-        align-items: start;
+        align-items: center;
     }
 
     .about__divider {
