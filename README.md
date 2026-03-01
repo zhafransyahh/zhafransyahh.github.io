@@ -18,11 +18,11 @@ Defined in `css/main.css` as CSS custom properties:
 
 ```css
 :root {
-    --accent: #586994;         /* Baltic Blue — primary brand color */
+    --accent: #808CB2;         /* Slate Blue — primary brand color */
     --bg: #0c1220;             /* near-black background */
     --bg-subtle: #111827;
     --bg-card: #151d2e;
-    --text-primary: #e4e8ed;
+    --text-primary: #d1d5db;
     --text-secondary: #8892a4;
     --text-muted: #4a5568;
     --border: rgba(228,232,237,0.08);
@@ -32,7 +32,7 @@ Defined in `css/main.css` as CSS custom properties:
 }
 ```
 
-**Theme:** Dark editorial. Navy-black background, cool off-white type, Baltic Blue accent. Serious, premium, intentionally non-generic.
+**Theme:** Dark editorial. Navy-black background, cool off-white type, Slate Blue accent. Serious, premium, intentionally non-generic.
 
 **Typography:**
 - **Fraunces** — Optical-size aware serif. Used for headlines, hero titles, impact values.
@@ -49,7 +49,7 @@ Each PM case study has a scoped accent via `--page-accent` on the body:
 
 | Page | Accent | Hex |
 |---|---|---|
-| `cs-lender-integration.html` | Baltic Blue | `#586994` |
+| `cs-lender-integration.html` | Slate Blue | `#808CB2` |
 | `cs-maps-cost.html` | Teal | `#3d8c6e` |
 | `cs-insurance-claims.html` | Indigo | `#7b5ea7` |
 
