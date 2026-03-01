@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invisible at Low Volume | Rafi Zhafransyah</title>
+    <meta name="description"
+        content="How I cut infrastructure costs by 99% through a UX fix - detecting a 5,600% API call spike and eliminating it without rolling back the feature.">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230c1220'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Georgia,serif' font-size='16' font-weight='bold' fill='%23586994'%3ERZ%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/case-study.css">
+    <style>
+        :root {
+            --page-accent: #3d8c6e;
+        }
+
+        /* ─── BAR CHART ─── */
+        .chart {
+            position: relative;
+        }
+
+        .chart__zones {
+            display: flex;
+            gap: 1px;
+            align-items: flex-end;
+            height: 180px;
+            padding: 0 0 0.5rem;
+            border-bottom: 1px solid var(--border-light);
+            position: relative;
+        }
+
+        .chart__zone-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            flex: 1;
+        }
+
+        .chart__zone-label {
+            font-family: var(--mono);
+            font-size: 0.375rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .chart__bars {
+            display: flex;
+            gap: 2px;
+            align-items: flex-end;
+            height: 140px;
+            flex: 1;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .chart__bar {
+            flex: 1;
+            max-width: 28px;
+            border-radius: 2px 2px 0 0;
+            background: rgba(162, 171, 171, 0.2);
+            min-height: 4px;
+            position: relative;
+            transition: height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .chart__bar--baseline {
+            background: rgba(162, 171, 171, 0.2);
+        }
+
+        .chart__bar--spike {
+            background: rgba(176, 100, 58, 0.7);
+        }
+
+        .chart__bar--fixed {
+            background: rgba(61, 140, 110, 0.5);
+        }
+
+        .chart__bar--spike-peak {
+            background: rgba(176, 100, 58, 0.85);
+        }
+
+        .chart__bar--spike-peak::after {
+            content: '+5,600%';
+            position: absolute;
+            top: -1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--mono);
+            font-size: 0.4375rem;
+            color: #b07d3a;
+            white-space: nowrap;
+            letter-spacing: 0.06em;
+        }
+
+        .chart__xaxis {
+            display: flex;
+            gap: 1px;
+            margin-top: 0.5rem;
+        }
+
+        .chart__xgroup {
+            flex: 1;
+            text-align: center;
+            font-family: var(--mono);
+            font-size: 0.375rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .chart__ylabel {
+            font-family: var(--mono);
+            font-size: 0.375rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.625rem;
+        }
+
+        .chart__legend {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        .chart__legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--mono);
+            font-size: 0.4375rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+        }
+
+        .chart__legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 1px;
+            flex-shrink: 0;
+        }
+
+        /* ─── BEFORE/AFTER FLOW ─── */
+        .ux-compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        @media (max-width: 580px) {
+            .ux-compare {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .ux-col {
+            background: var(--bg-card);
+            padding: 1.5rem;
+        }
+
+        .ux-col__header {
+            font-family: var(--mono);
+            font-size: 0.4375rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ux-col--before .ux-col__header {
+            color: rgba(176, 100, 58, 0.8);
+        }
+
+        .ux-col--after .ux-col__header {
+            color: var(--page-accent);
+        }
+
+        .ux-col__dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .ux-col--before .ux-col__dot {
+            background: rgba(176, 100, 58, 0.8);
+        }
+
+        .ux-col--after .ux-col__dot {
+            background: var(--page-accent);
+        }
+
+        .ux-step {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+            margin-bottom: 0.875rem;
+            position: relative;
+        }
+
+        .ux-step:last-child {
+            margin-bottom: 0;
+        }
+
+        .ux-step__num {
+            font-family: var(--mono);
+            font-size: 0.4375rem;
+            color: var(--text-muted);
+            width: 14px;
+            flex-shrink: 0;
+            padding-top: 0.125rem;
+        }
+
+        .ux-step__card {
+            flex: 1;
+            background: var(--bg);
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
+            padding: 0.625rem 0.875rem;
+        }
+
+        .ux-step__title {
+            font-family: var(--sans);
+            font-size: 0.6875rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            line-height: 1.3;
+        }
+
+        .ux-step__desc {
+            font-family: var(--sans);
+            font-size: 0.5625rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .ux-step__badge {
+            display: inline-block;
+            margin-top: 0.375rem;
+            font-family: var(--mono);
+            font-size: 0.375rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0.125rem 0.375rem;
+            border-radius: 2px;
+        }
+
+        .ux-step__badge--bad {
+            color: rgba(176, 100, 58, 0.9);
+            border: 1px solid rgba(176, 100, 58, 0.3);
+            background: rgba(176, 100, 58, 0.06);
+        }
+
+        .ux-step__badge--good {
+            color: var(--page-accent);
+            border: 1px solid rgba(61, 140, 110, 0.3);
+            background: rgba(61, 140, 110, 0.06);
+        }
+
+        /* Animate bars on scroll */
+        .chart__bar {
+            height: 0;
+        }
+
+        .chart.animated .chart__bar {
+            height: var(--bar-h);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .chart__bar {
+                transition: none !important;
+                height: var(--bar-h) !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- BACK BUTTON -->
+    <a href="index.html"
+        style="position: fixed; top: 1.5rem; left: 1.5rem; z-index: 1000; display: inline-flex; align-items: center; justify-content: center; padding: 0.5rem 1rem; background: rgba(12, 18, 32, 0.8); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 100px; color: #e4e8ed; text-decoration: none; font-family: 'Space Mono', 'Courier New', monospace; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; transition: background 0.3s, transform 0.3s;"
+        onmouseover="this.style.background='rgba(255, 255, 255, 0.1)';this.style.transform='translateY(-2px)';"
+        onmouseout="this.style.background='rgba(12, 18, 32, 0.8)';this.style.transform='translateY(0)';">&larr; Back</a>
+
+
+
+    <!-- HERO -->
+    <header class="cs-hero">
+        <div class="cs-hero__inner">
+            <div class="cs-hero__eyebrow reveal">JULO &middot; Cost Optimization &middot; Q3–Q4 2024</div>
+            <h1 class="cs-hero__title reveal reveal-delay-1">
+                Invisible at<br>
+                <em>Low Volume</em>
+            </h1>
+
+            <div class="cs-meta reveal reveal-delay-2">
+                <div class="cs-meta__cell">
+                    <div class="cs-meta__label">Role</div>
+                    <div class="cs-meta__value">Product Manager</div>
+                </div>
+                <div class="cs-meta__cell">
+                    <div class="cs-meta__label">Timeline</div>
+                    <div class="cs-meta__value">Q3–Q4 2024</div>
+                </div>
+                <div class="cs-meta__cell">
+                    <div class="cs-meta__label">Direct Savings</div>
+                    <div class="cs-meta__value">&gt;10× prior quarterly API spend recovered</div>
+                </div>
+                <div class="cs-meta__cell">
+                    <div class="cs-meta__label">Annualized</div>
+                    <div class="cs-meta__value">~40× ROI on zero infrastructure cost</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- BODY -->
+    <main class="cs-body">
+
+        <!-- SECTION: The Anomaly -->
+        <section class="cs-section reveal">
+            <div class="cs-section__label">01 / The Anomaly</div>
+            <h2 class="cs-h2">A chart that didn't <em>make sense</em></h2>
+            <p class="cs-text">It started with a chart that didn't make sense. While reviewing our mobile action logs, I
+                noticed a sharp spike in Google Places API usage within our loan application flow. Before the spike, we
+                were averaging a few hundred requests per day. Within weeks, that number had climbed by over 5,600%,
+                seemingly overnight.</p>
+            <p class="cs-text">No change in user volume explained it. So I started digging.</p>
+        </section>
+
+        <!-- SECTION: API Spike Chart -->
+        <section class="cs-section reveal">
+            <div class="cs-section__label">02 / The Spike</div>
+            <h2 class="cs-h2">5,600% in daily API requests, <em>overnight</em></h2>
+            <p class="cs-text">I pulled a time-series query from our internal logs to isolate exactly when the spike
+                began and how it distributed across users. The timing correlated precisely with a recent app release. At
+                peak, based on Google's publicly listed Places API pricing, we were tracking toward a monthly spend that
+                would have made this a top-3 recurring infrastructure cost, for a single API endpoint.</p>
+
+            <div class="cs-diagram reveal" id="spike-chart">
+                <div class="cs-diagram__label">Google Places API: daily request volume (relative scale)</div>
+                <div class="chart" id="chart">
+                    <div class="chart__ylabel">Relative API volume</div>
+                    <div class="chart__zones">
+                        <!-- Baseline zone -->
+                        <div class="chart__zone-group">
+                            <div class="chart__bars">
+                                <div class="chart__bar chart__bar--baseline" style="--bar-h: 12px;"></div>
+                                <div class="chart__bar chart__bar--baseline" style="--bar-h: 10px;"></div>
+                                <div class="chart__bar chart__bar--baseline" style="--bar-h: 14px;"></div>
+                                <div class="chart__bar chart__bar--baseline" style="--bar-h: 11px;"></div>
+                            </div>
+                        </div>
+                        <!-- Ramp-up -->
+                        <div class="chart__zone-group">
+                            <div class="chart__bars">
+                                <div class="chart__bar chart__bar--baseline" style="--bar-h: 13px;"></div>
+                                <div class="chart__bar chart__bar--baseline" style="--bar-h: 18px;"></div>
+                                <div class="chart__bar chart__bar--baseline" style="--bar-h: 22px;"></div>
+                                <div class="chart__bar chart__bar--baseline" style="--bar-h: 28px;"></div>
+                            </div>
+                        </div>
+                        <!-- Release week -->
+                        <div class="chart__zone-group">
+                            <div class="chart__bars">
+                                <div class="chart__bar chart__bar--spike" style="--bar-h: 48px;"></div>
+                                <div class="chart__bar chart__bar--spike" style="--bar-h: 72px;"></div>
+                                <div class="chart__bar chart__bar--spike" style="--bar-h: 96px;"></div>
+                                <div class="chart__bar chart__bar--spike-peak" style="--bar-h: 132px;"></div>
+                            </div>
+                        </div>
+                        <!-- Sustained spike -->
+                        <div class="chart__zone-group">
+                            <div class="chart__bars">
+                                <div class="chart__bar chart__bar--spike" style="--bar-h: 128px;"></div>
+                                <div class="chart__bar chart__bar--spike" style="--bar-h: 122px;"></div>
+                                <div class="chart__bar chart__bar--spike" style="--bar-h: 119px;"></div>
+                                <div class="chart__bar chart__bar--spike" style="--bar-h: 124px;"></div>
+                            </div>
+                        </div>
+                        <!-- Fix applied -->
+                        <div class="chart__zone-group">
+                            <div class="chart__bars">
+                                <div class="chart__bar chart__bar--spike" style="--bar-h: 88px;"></div>
+                                <div class="chart__bar chart__bar--spike" style="--bar-h: 44px;"></div>
+                                <div class="chart__bar chart__bar--fixed" style="--bar-h: 16px;"></div>
+                                <div class="chart__bar chart__bar--fixed" style="--bar-h: 13px;"></div>
+                            </div>
+                        </div>
+                        <!-- Post-fix baseline -->
+                        <div class="chart__zone-group">
+                            <div class="chart__bars">
+                                <div class="chart__bar chart__bar--fixed" style="--bar-h: 11px;"></div>
+                                <div class="chart__bar chart__bar--fixed" style="--bar-h: 12px;"></div>
+                                <div class="chart__bar chart__bar--fixed" style="--bar-h: 10px;"></div>
+                                <div class="chart__bar chart__bar--fixed" style="--bar-h: 13px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart__xaxis">
+                        <div class="chart__xgroup">Pre-release baseline</div>
+                        <div class="chart__xgroup">Ramp-up</div>
+                        <div class="chart__xgroup">Release week</div>
+                        <div class="chart__xgroup">Sustained spike</div>
+                        <div class="chart__xgroup">Fix applied</div>
+                        <div class="chart__xgroup">Post-fix</div>
+                    </div>
+                    <div class="chart__legend">
+                        <div class="chart__legend-item">
+                            <div class="chart__legend-dot" style="background: rgba(162,171,171,0.35);"></div>
+                            Pre-fix baseline
+                        </div>
+                        <div class="chart__legend-item">
+                            <div class="chart__legend-dot" style="background: rgba(176,100,58,0.75);"></div>
+                            Unresolved spike
+                        </div>
+                        <div class="chart__legend-item">
+                            <div class="chart__legend-dot" style="background: rgba(61,140,110,0.6);"></div>
+                            Post-fix (target)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: Root Cause -->
+        <section class="cs-section reveal">
+            <div class="cs-section__label">03 / Root Cause</div>
+            <h2 class="cs-h2">The same flow: <em>invisible at low volume, catastrophic at scale</em></h2>
+            <p class="cs-text">The timing correlated precisely with a recent app release - one that standardized our
+                main product's onboarding form address fields with structured dropdowns instead of free text. What made
+                this tricky to catch early: the dropdown implementation wasn't new. It had already existed in our
+                starter product for some time, where it worked without issue. But the starter product operates at a
+                fraction of the volume of our main product, so the API cost it generated was small enough to go
+                unnoticed.</p>
+            <p class="cs-text">When the same implementation was carried over to the main product, the scale difference
+                made all the difference. The culprit was in the flow itself: when users entered the address screen, the
+                implementation forced them directly into a search interaction - triggering a Google Places API call
+                immediately, before they'd done anything intentional. Users who fumbled through the screen or re-entered
+                it multiple times were racking up 10, 15, even 20+ API hits per session.</p>
+
+            <div class="cs-pullquote">
+                <p>That cohort alone accounted for a disproportionate share of the spike volume. The problem wasn't the
+                    feature - it was where in the flow we were triggering the API.</p>
+            </div>
+        </section>
+
+        <!-- SECTION: The Fix - Before/After -->
+        <section class="cs-section reveal">
+            <div class="cs-section__label">04 / The Fix</div>
+            <h2 class="cs-h2">Changing the flow, <em>not the feature</em></h2>
+            <p class="cs-text">The instinct might have been to roll back the dropdown standardization entirely. I pushed
+                back on that. The dropdown was the right product decision; it reduced input errors and improved data
+                quality downstream. Working with our designer and tech lead, we redesigned the address screen so that
+                search moved from a default behavior to an intentional one. No new infrastructure, no rollback.</p>
+
+            <div class="cs-diagram reveal">
+                <div class="cs-diagram__label">Address screen flow: before &amp; after</div>
+                <div class="ux-compare">
+                    <!-- BEFORE -->
+                    <div class="ux-col ux-col--before">
+                        <div class="ux-col__header">
+                            <div class="ux-col__dot"></div>
+                            Before: default trigger
+                        </div>
+                        <div class="ux-step">
+                            <div class="ux-step__num">01</div>
+                            <div class="ux-step__card">
+                                <div class="ux-step__title">User enters address screen</div>
+                                <div class="ux-step__desc">Search bar auto-focused</div>
+                                <span class="ux-step__badge ux-step__badge--bad">API call fires immediately</span>
+                            </div>
+                        </div>
+                        <div class="ux-step">
+                            <div class="ux-step__num">02</div>
+                            <div class="ux-step__card">
+                                <div class="ux-step__title">User fumbles or re-enters</div>
+                                <div class="ux-step__desc">Each screen entry = new API call</div>
+                                <span class="ux-step__badge ux-step__badge--bad">10–20+ calls / session</span>
+                            </div>
+                        </div>
+                        <div class="ux-step">
+                            <div class="ux-step__num">03</div>
+                            <div class="ux-step__card">
+                                <div class="ux-step__title">Address confirmed</div>
+                                <div class="ux-step__desc">Many unnecessary calls already made</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AFTER -->
+                    <div class="ux-col ux-col--after">
+                        <div class="ux-col__header">
+                            <div class="ux-col__dot"></div>
+                            After: intentional trigger
+                        </div>
+                        <div class="ux-step">
+                            <div class="ux-step__num">01</div>
+                            <div class="ux-step__card">
+                                <div class="ux-step__title">User enters address screen</div>
+                                <div class="ux-step__desc">Fields + "Use Current Location" visible, no API yet</div>
+                                <span class="ux-step__badge ux-step__badge--good">Zero API calls</span>
+                            </div>
+                        </div>
+                        <div class="ux-step">
+                            <div class="ux-step__num">02</div>
+                            <div class="ux-step__card">
+                                <div class="ux-step__title">User taps location picker</div>
+                                <div class="ux-step__desc">Map and search bar appear on intentional action</div>
+                                <span class="ux-step__badge ux-step__badge--good">1 call on intent</span>
+                            </div>
+                        </div>
+                        <div class="ux-step">
+                            <div class="ux-step__num">03</div>
+                            <div class="ux-step__card">
+                                <div class="ux-step__title">Pin confirmed → cascading fill</div>
+                                <div class="ux-step__desc">Address details auto-populate. Error state with manual
+                                    fallback</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- IMPACT STRIP -->
+    <div class="cs-impact">
+        <div class="cs-impact__inner">
+            <div class="cs-impact__label reveal">Outcomes: post-fix period</div>
+            <div class="cs-impact__grid cols-4 reveal">
+                <div class="cs-impact__item">
+                    <span class="cs-impact__value">−99%</span>
+                    <p class="cs-impact__desc">Google Places API call volume vs. spike peak, a return to pre-release
+                        baseline</p>
+                </div>
+                <div class="cs-impact__item">
+                    <span class="cs-impact__value">Millions</span>
+                    <p class="cs-impact__desc">Unnecessary API calls eliminated, calculable against Google's published
+                        Places API pricing</p>
+                </div>
+                <div class="cs-impact__item">
+                    <span class="cs-impact__value">&gt;10×</span>
+                    <p class="cs-impact__desc">Cost recovered vs. prior quarterly API spend, from a UX change with zero
+                        infrastructure cost</p>
+                </div>
+                <div class="cs-impact__item">
+                    <span class="cs-impact__value">&lt;1 mo</span>
+                    <p class="cs-impact__desc">Time to full ROI recovery: the fix paid back more than its equivalent
+                        period cost within the first billing cycle</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAKEAWAY -->
+    <div class="cs-takeaway">
+        <div class="cs-takeaway__inner reveal">
+            <div class="cs-takeaway__label">What I Took Away</div>
+            <p class="cs-takeaway__text">The technical fix took a few weeks. The harder work was in the diagnosis,
+                recognizing that a cost problem was actually a UX flow problem in disguise, and that the right solution
+                wasn't reverting a good feature but rethinking how users encountered it. Infrastructure consequences are
+                almost never visible at the time of a product decision. The PM's job is to make them visible before they
+                become expensive; and in this case, the data made that possible.</p>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="cs-footer">
+        <div class="cs-footer__inner">
+            <a href="portfolio.html" class="cs-footer__link">← All work</a>
+            <div style="display: flex; gap: 2rem; align-items: center;">
+                <a href="cs-lender-integration.html" class="cs-footer__back-to">← Previous</a>
+                <a href="cs-insurance-claims.html" class="cs-footer__back-to">Next →</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+
+
+        // Reveal
+        const reveals = document.querySelectorAll('.reveal');
+        const revealObs = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    revealObs.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+        reveals.forEach(el => revealObs.observe(el));
+
+        // Animate chart bars when chart scrolls into view
+        const chartEl = document.getElementById('chart');
+        const chartObs = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    chartEl.classList.add('animated');
+                    chartObs.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.3 });
+        chartObs.observe(chartEl);
+    </script>
+
+</body>
+
+</html>

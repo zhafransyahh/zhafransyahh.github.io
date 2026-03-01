@@ -7,10 +7,10 @@
   <meta name="theme-color" content="#1C1C1E">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Gitra — Guitar Learning App</title>
+  <title>What the Hands Already Know | Rafi Zhafransyah</title>
   <link rel="icon" type="image/svg+xml"
     href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230D0D0C'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Georgia,serif' font-size='16' font-weight='bold' fill='%23C75B39'%3ERZ%3C/text%3E%3C/svg%3E">
-  <meta property="og:title" content="Gitra — Guitar Learning App">
+  <meta property="og:title" content="Gitra - Guitar Learning App">
   <meta property="og:description"
     content="UX/UI case study: A mobile app designed to make guitar learning accessible and engaging.">
   <meta property="og:type" content="article">
@@ -644,25 +644,20 @@
 
 <body>
 
-  <!-- SITE NAV -->
-  <nav
-    style="position:fixed;top:0;left:0;right:0;z-index:100;padding:0.75rem 2rem;display:flex;justify-content:space-between;align-items:center;background:rgba(28,28,30,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.06);font-family:'DM Mono',monospace;">
-    <a href="index.html"
-      style="font-family:'DM Mono',monospace;font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(248,245,240,0.5);text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;transition:color 0.3s;"
-      onmouseover="this.style.color='#F5A623'" onmouseout="this.style.color='rgba(248,245,240,0.5)'">&larr; Back to
-      portfolio</a>
-    <a href="index.html"
-      style="font-family:'DM Mono',monospace;font-size:0.6875rem;letter-spacing:-0.02em;color:rgba(248,245,240,0.7);text-decoration:none;">R<span
-        style="color:#F5A623;">.</span>Z</a>
-  </nav>
-  <div style="height:44px;background:#1C1C1E;"></div>
+  <!-- BACK BUTTON -->
+  <a href="index.html"
+    style="position: fixed; top: 1.5rem; left: 1.5rem; z-index: 1000; display: inline-flex; align-items: center; justify-content: center; padding: 0.5rem 1rem; background: rgba(12, 18, 32, 0.8); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 100px; color: #e4e8ed; text-decoration: none; font-family: 'Space Mono', 'Courier New', monospace; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; transition: background 0.3s, transform 0.3s;"
+    onmouseover="this.style.background='rgba(255, 255, 255, 0.1)';this.style.transform='translateY(-2px)';"
+    onmouseout="this.style.background='rgba(12, 18, 32, 0.8)';this.style.transform='translateY(0)';">&larr; Back</a>
+
+
 
   <!-- HERO -->
   <section class="hero">
     <div class="hero-content">
-      <p class="hero-eyebrow">UX / UI Case Study</p>
-      <h1 class="hero-title"><em>Gitra</em></h1>
-      <p class="hero-desc">A mobile application designed to make guitar learning accessible, intuitive, and enjoyable —
+      <p class="hero-eyebrow">Gitra: UX / UI Case Study</p>
+      <h1 class="hero-title">What the Hands<br><em>Already Know</em></h1>
+      <p class="hero-desc">A mobile application designed to make guitar learning accessible, intuitive, and enjoyable -
         from beginner chords to expert technique.</p>
     </div>
     <div class="hero-meta">
@@ -687,7 +682,7 @@
 
   <!-- OVERVIEW -->
   <section class="overview">
-    <p class="section-label">01 — Overview</p>
+    <p class="section-label">01. Overview</p>
     <h2 class="section-title">What is Gitra?</h2>
     <div class="overview-grid">
       <div class="overview-text">
@@ -695,7 +690,7 @@
           pace. The app bridges the gap between costly private lessons and the overwhelming nature of YouTube tutorials,
           offering a structured, self-guided learning experience.</p>
         <p>The product focuses on three core pillars: chord discovery, guided learning materials, and real-time tuning
-          assistance — all wrapped in a warm, approachable UI that encourages consistent practice.</p>
+          assistance, all wrapped in a warm, approachable UI that encourages consistent practice.</p>
         <div class="role-list">
           <span class="role-chip">Product Design</span>
           <span class="role-chip">User Research</span>
@@ -732,7 +727,7 @@
 
   <!-- VISUAL DIRECTION -->
   <section class="visual-dir">
-    <p class="section-label">02 — Visual Direction</p>
+    <p class="section-label">02. Visual Direction</p>
     <h2 class="section-title">Design Language</h2>
 
     <div style="margin-bottom: 3rem;">
@@ -799,7 +794,7 @@
 
   <!-- FEATURES -->
   <section class="features">
-    <p class="section-label">03 — Features</p>
+    <p class="section-label">03. Features</p>
     <h2 class="section-title" style="color: var(--off-white);">Core Capabilities</h2>
 
     <div class="features-grid">
@@ -807,7 +802,7 @@
         <p class="feature-num">F-01</p>
         <div class="feature-icon">🎸</div>
         <h3>Chord Search</h3>
-        <p>Easily search any guitar chord, hassle-free. Browse chord libraries by key, difficulty, or song — with visual
+        <p>Easily search any guitar chord, hassle-free. Browse chord libraries by key, difficulty, or song, with visual
           fingering diagrams that are clear and immediately actionable.</p>
       </div>
       <div class="feature-card">
@@ -815,21 +810,21 @@
         <div class="feature-icon">📖</div>
         <h3>Learning Materials</h3>
         <p>Structured, accessible learning modules designed for all levels. Gitra provides guided exercises, theory
-          basics, and practice tracks — so users always know what to do next.</p>
+          basics, and practice tracks, so users always know what to do next.</p>
       </div>
       <div class="feature-card">
         <p class="feature-num">F-03</p>
         <div class="feature-icon">🎵</div>
         <h3>Automatic Tuner</h3>
         <p>Built-in chromatic tuner using the device microphone. Real-time visual feedback makes tuning fast and
-          accurate before every practice session — no separate app needed.</p>
+          accurate before every practice session, no separate app needed.</p>
       </div>
     </div>
   </section>
 
   <!-- WIREFRAMES -->
   <section class="wireframes">
-    <p class="section-label">04 — Wireframes</p>
+    <p class="section-label">04. Wireframes</p>
     <h2 class="section-title">Screen Architecture</h2>
     <p class="wireframe-desc">Before applying visual design, the information architecture and user flows were mapped
       through low-fidelity wireframes. These explored different layouts for each primary feature, identifying the most
@@ -886,20 +881,20 @@
 
   <!-- APP ICON -->
   <section class="icon-evolution">
-    <p class="section-label">05 — App Icon</p>
+    <p class="section-label">05. App Icon</p>
     <h2 class="section-title" style="color: var(--off-white);">Identity Evolution</h2>
 
     <div class="icon-row">
       <div class="app-icon-card">
         <div class="app-icon-visual v1">🎸</div>
-        <p class="ver">v1.0 — Initial</p>
+        <p class="ver">v1.0: Initial</p>
       </div>
       <div class="arrow-evolve">→</div>
       <div class="app-icon-card">
         <div class="app-icon-visual v2">🎸</div>
-        <p class="ver" style="color: var(--amber);">v2.0 — Refined</p>
+        <p class="ver" style="color: var(--amber);">v2.0: Refined</p>
       </div>
-      <p class="icon-note">The app icon evolved from a dark, subdued treatment to a bold amber identity — reflecting the
+      <p class="icon-note">The app icon evolved from a dark, subdued treatment to a bold amber identity, reflecting the
         app's warmth and approachability. The updated icon communicates confidence and energy at a glance, aligning with
         Gitra's mission to invite, not intimidate.</p>
     </div>

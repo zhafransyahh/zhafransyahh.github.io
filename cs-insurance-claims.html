@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Arithmetic of Trust | Rafi Zhafransyah</title>
+    <meta name="description"
+        content="Building an insurance claims system from scratch at JULO - 0-to-1, under regulatory requirements, across three parties, with no prior documentation.">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230c1220'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Georgia,serif' font-size='16' font-weight='bold' fill='%23586994'%3ERZ%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/case-study.css">
+    <style>
+        :root {
+            --page-accent: #7b5ea7;
+        }
+
+        /* ─── 4-STEP LIFECYCLE STEPPER ─── */
+        .stepper {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        @media (max-width: 600px) {
+            .stepper {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .stepper {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .stepper__step {
+            background: var(--bg-card);
+            padding: 1.5rem 1.25rem;
+            position: relative;
+        }
+
+        .stepper__num {
+            font-family: var(--mono);
+            font-size: 0.375rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .stepper__icon {
+            margin-bottom: 0.875rem;
+        }
+
+        .stepper__icon svg {
+            width: 22px;
+            height: 22px;
+            color: var(--page-accent);
+        }
+
+        .stepper__title {
+            font-family: var(--sans);
+            font-size: 0.75rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .stepper__desc {
+            font-family: var(--sans);
+            font-size: 0.5625rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .stepper__connector {
+            position: absolute;
+            top: 1.875rem;
+            right: -0.5px;
+            width: 1px;
+            height: 22px;
+            background: var(--border-light);
+            display: none;
+        }
+
+        @media (min-width: 601px) {
+            .stepper__connector {
+                display: block;
+            }
+
+            .stepper__step:last-child .stepper__connector {
+                display: none;
+            }
+        }
+
+        /* ─── 3-PARTY ARCHITECTURE ─── */
+        .arch {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            grid-template-rows: auto auto auto;
+            gap: 0;
+            align-items: center;
+            min-height: 240px;
+        }
+
+        @media (max-width: 540px) {
+            .arch {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+                min-height: unset;
+            }
+
+            .arch__edge--h {
+                display: none;
+            }
+
+            .arch__edge--v {
+                display: flex;
+            }
+        }
+
+        .arch__node {
+            background: var(--bg);
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            padding: 1.125rem 1.25rem;
+            text-align: center;
+        }
+
+        .arch__node--center {
+            border-color: var(--page-accent);
+            box-shadow: 0 0 0 1px rgba(123, 94, 167, 0.2);
+            grid-column: 2;
+            grid-row: 2;
+        }
+
+        .arch__node--lender {
+            grid-column: 1;
+            grid-row: 2;
+        }
+
+        .arch__node--insurer {
+            grid-column: 3;
+            grid-row: 2;
+        }
+
+        .arch__node-tag {
+            font-family: var(--mono);
+            font-size: 0.375rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+            margin-bottom: 0.375rem;
+        }
+
+        .arch__node-name {
+            font-family: var(--sans);
+            font-size: 0.75rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            line-height: 1.3;
+        }
+
+        .arch__node--center .arch__node-name {
+            color: var(--page-accent);
+        }
+
+        .arch__edge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0 0.5rem;
+        }
+
+        .arch__edge--left {
+            grid-column: 1 / 2;
+            grid-row: 2;
+            justify-self: end;
+            width: 100%;
+        }
+
+        .arch__edge--right {
+            grid-column: 2 / 4;
+            grid-row: 2;
+            justify-self: start;
+            width: 100%;
+        }
+
+        /* Simplified: just use horizontal layout for the edges within center area */
+        .arch-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            flex-wrap: wrap;
+            row-gap: 1.5rem;
+        }
+
+        .arch-node {
+            background: var(--bg);
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            padding: 1rem 1.25rem;
+            text-align: center;
+            min-width: 110px;
+        }
+
+        .arch-node--center {
+            border-color: var(--page-accent);
+            box-shadow: 0 0 0 1px rgba(123, 94, 167, 0.15);
+        }
+
+        .arch-node__tag {
+            font-family: var(--mono);
+            font-size: 0.375rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+            margin-bottom: 0.375rem;
+        }
+
+        .arch-node__name {
+            font-family: var(--sans);
+            font-size: 0.6875rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            line-height: 1.3;
+        }
+
+        .arch-node--center .arch-node__name {
+            color: var(--page-accent);
+        }
+
+        .arch-edge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 0 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .arch-edge__top,
+        .arch-edge__bot {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .arch-edge__line {
+            width: 36px;
+            height: 1px;
+            background: var(--border-light);
+            position: relative;
+        }
+
+        .arch-edge__line--out::after {
+            content: '';
+            position: absolute;
+            right: -1px;
+            top: -3px;
+            border-left: 5px solid var(--border-light);
+            border-top: 3px solid transparent;
+            border-bottom: 3px solid transparent;
+        }
+
+        .arch-edge__line--in::before {
+            content: '';
+            position: absolute;
+            left: -1px;
+            top: -3px;
+            border-right: 5px solid rgba(123, 94, 167, 0.45);
+            border-top: 3px solid transparent;
+            border-bottom: 3px solid transparent;
+        }
+
+        .arch-edge__line--in {
+            background: rgba(123, 94, 167, 0.35);
+        }
+
+        .arch-edge__tag {
+            font-family: var(--mono);
+            font-size: 0.3125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .arch-edge__tag--return {
+            color: rgba(123, 94, 167, 0.7);
+        }
+
+        /* ─── PROCESSING TIME ROADMAP ─── */
+        .roadmap {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .roadmap__row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .roadmap__label {
+            font-family: var(--mono);
+            font-size: 0.4375rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+            width: 56px;
+            flex-shrink: 0;
+            text-align: right;
+        }
+
+        .roadmap__track {
+            flex: 1;
+            height: 28px;
+            background: var(--bg);
+            border: 1px solid var(--border-light);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .roadmap__fill {
+            height: 100%;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            padding-left: 0.75rem;
+        }
+
+        .roadmap__fill-text {
+            font-family: var(--mono);
+            font-size: 0.4375rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(228, 232, 237, 0.75);
+        }
+
+        .roadmap__fill--current {
+            background: rgba(123, 94, 167, 0.5);
+            width: 100%;
+        }
+
+        .roadmap__fill--target {
+            background: rgba(61, 140, 110, 0.4);
+            width: calc(1/7 * 100%);
+        }
+
+        .roadmap__fill--target .roadmap__fill-text {
+            color: rgba(61, 140, 110, 0.9);
+        }
+
+        .roadmap__meta {
+            font-family: var(--sans);
+            font-size: 0.5625rem;
+            color: var(--text-muted);
+            width: 80px;
+            flex-shrink: 0;
+        }
+
+        .roadmap__badge {
+            display: inline-block;
+            font-family: var(--mono);
+            font-size: 0.375rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0.125rem 0.375rem;
+            border-radius: 2px;
+        }
+
+        .roadmap__badge--current {
+            color: rgba(123, 94, 167, 0.9);
+            border: 1px solid rgba(123, 94, 167, 0.3);
+        }
+
+        .roadmap__badge--target {
+            color: rgba(61, 140, 110, 0.9);
+            border: 1px solid rgba(61, 140, 110, 0.3);
+        }
+
+        @media (max-width: 480px) {
+            .arch-wrap {
+                flex-direction: column;
+            }
+
+            .arch-edge {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- BACK BUTTON -->
+    <a href="index.html"
+        style="position: fixed; top: 1.5rem; left: 1.5rem; z-index: 1000; display: inline-flex; align-items: center; justify-content: center; padding: 0.5rem 1rem; background: rgba(12, 18, 32, 0.8); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 100px; color: #e4e8ed; text-decoration: none; font-family: 'Space Mono', 'Courier New', monospace; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; transition: background 0.3s, transform 0.3s;"
+        onmouseover="this.style.background='rgba(255, 255, 255, 0.1)';this.style.transform='translateY(-2px)';"
+        onmouseout="this.style.background='rgba(12, 18, 32, 0.8)';this.style.transform='translateY(0)';">&larr; Back</a>
+
+
+
+    <!-- HERO -->
+    <header class="cs-hero">
+        <div class="cs-hero__inner">
+            <div class="cs-hero__eyebrow reveal">JULO &middot; 0-to-1 System Design &middot; 2024</div>
+            <h1 class="cs-hero__title reveal reveal-delay-1">
+                The Arithmetic<br>
+                of <em>Trust</em>
+            </h1>
+
+            <div class="cs-meta reveal reveal-delay-2">
+                <div class="cs-meta__cell">
+                    <div class="cs-meta__label">Role</div>
+                    <div class="cs-meta__value">Product Manager</div>
+                </div>
+                <div class="cs-meta__cell">
+                    <div class="cs-meta__label">Timeline</div>
+                    <div class="cs-meta__value">2024 – Present</div>
+                </div>
+                <div class="cs-meta__cell">
+                    <div class="cs-meta__label">Coverage</div>
+                    <div class="cs-meta__value">100% of active loan cohorts enrolled</div>
+                </div>
+                <div class="cs-meta__cell">
+                    <div class="cs-meta__label">Starting Point</div>
+                    <div class="cs-meta__value">Zero, 0 to 1 build</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- BODY -->
+    <main class="cs-body">
+
+        <!-- SECTION: The Starting Point -->
+        <section class="cs-section reveal">
+            <div class="cs-section__label">01 / The Starting Point</div>
+            <h2 class="cs-h2">Nothing. Just a regulatory requirement and a <em>blank page</em></h2>
+            <p class="cs-text">When our institutional lending partner required insurance coverage for all loans
+                disbursed through our platform, there was no system to point to. No process, no integration, no
+                documentation. Just a regulatory requirement and a blank page.</p>
+            <p class="cs-text">I designed and shipped it from scratch, and I continue to own it independently today.</p>
+        </section>
+
+        <!-- SECTION: How the System Works - Stepper -->
+        <section class="cs-section reveal">
+            <div class="cs-section__label">02 / How the System Works</div>
+            <h2 class="cs-h2">The full <em>loan insurance lifecycle</em></h2>
+            <p class="cs-text">The insurance flow I designed covers the entire lifecycle of a loan, from disbursement to
+                claim resolution. The system runs as an API integration across three parties: our internal platform, the
+                insurance partner, and the institutional lender.</p>
+
+            <div class="cs-diagram reveal" style="padding: 1.5rem 1.5rem 1.75rem;">
+                <div class="cs-diagram__label">4-stage loan insurance lifecycle</div>
+                <div class="stepper">
+                    <div class="stepper__step">
+                        <div class="stepper__num">Stage 01</div>
+                        <div class="stepper__icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            </svg>
+                        </div>
+                        <div class="stepper__title">Enrollment</div>
+                        <div class="stepper__desc">Loan is disbursed → automatically enrolled into coverage</div>
+                        <div class="stepper__connector"></div>
+                    </div>
+                    <div class="stepper__step">
+                        <div class="stepper__num">Stage 02</div>
+                        <div class="stepper__icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="7" width="20" height="14" rx="2" />
+                                <path d="M16 7V5a2 2 0 0 0-4 0v2M12 12v4M10 14h4" />
+                            </svg>
+                        </div>
+                        <div class="stepper__title">Premium Calculation</div>
+                        <div class="stepper__desc">Financial adjustment mechanism ensures accuracy across portfolio
+                        </div>
+                        <div class="stepper__connector"></div>
+                    </div>
+                    <div class="stepper__step">
+                        <div class="stepper__num">Stage 03</div>
+                        <div class="stepper__icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                        </div>
+                        <div class="stepper__title">Claim Trigger</div>
+                        <div class="stepper__desc">Loan hits delinquency threshold → claim filed automatically</div>
+                        <div class="stepper__connector"></div>
+                    </div>
+                    <div class="stepper__step">
+                        <div class="stepper__num">Stage 04</div>
+                        <div class="stepper__icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                        </div>
+                        <div class="stepper__title">Claim Confirmation</div>
+                        <div class="stepper__desc">Insurance partner confirms amount → settled directly to lender</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: The Hard Part -->
+        <section class="cs-section reveal">
+            <div class="cs-section__label">03 / The Hardest Part</div>
+            <h2 class="cs-h2">Claim accuracy against a <em>moving target</em></h2>
+            <p class="cs-text">The most technically demanding aspect of this system was claim accuracy. Insurance claims
+                are based on outstanding loan amounts and interest at the time of the claim - but these numbers change
+                daily. A claim filed against a moving target risks rejection.</p>
+
+            <div class="cs-pullquote">
+                <p>My solution was to implement a cutoff-date snapshot mechanism. At the point of claim, the system
+                    captures a fixed snapshot of the outstanding balance and applicable interest, locking those figures
+                    before the claim is processed.</p>
+            </div>
+
+            <p class="cs-text">This eliminated the risk of calculation drift causing claim rejections downstream.
+                Getting this right required close coordination with engineering to ensure the snapshot logic was
+                airtight, and with the business team to validate that the financial adjustment calculations were
+                accurate at scale - where even small errors compound significantly across a large portfolio.</p>
+        </section>
+
+        <!-- SECTION: 3-Party Architecture -->
+        <section class="cs-section reveal">
+            <div class="cs-section__label">04 / System Architecture</div>
+            <h2 class="cs-h2">Three parties, one <em>coordinated flow</em></h2>
+            <p class="cs-text">The system required simultaneous coordination across engineering, QA, business, and two
+                external organizations. Every API contract, data format, and settlement flow had to be agreed and tested
+                across all three parties before go-live.</p>
+
+            <div class="cs-diagram reveal">
+                <div class="cs-diagram__label">API integration: 3-party coordination</div>
+                <div class="arch-wrap">
+                    <div class="arch-node">
+                        <div class="arch-node__tag">Party 01</div>
+                        <div class="arch-node__name">Institutional<br>Lender</div>
+                    </div>
+
+                    <div class="arch-edge">
+                        <div class="arch-edge__top">
+                            <div class="arch-edge__line arch-edge__line--out"></div>
+                            <div class="arch-edge__tag">Settlement</div>
+                        </div>
+                        <div class="arch-edge__bot">
+                            <div class="arch-edge__tag arch-edge__tag--return">Claim conf.</div>
+                            <div class="arch-edge__line arch-edge__line--in"></div>
+                        </div>
+                    </div>
+
+                    <div class="arch-node arch-node--center">
+                        <div class="arch-node__tag">Party 02</div>
+                        <div class="arch-node__name">JULO<br>Platform</div>
+                    </div>
+
+                    <div class="arch-edge">
+                        <div class="arch-edge__top">
+                            <div class="arch-edge__line arch-edge__line--out"></div>
+                            <div class="arch-edge__tag">Claim filing</div>
+                        </div>
+                        <div class="arch-edge__bot">
+                            <div class="arch-edge__tag arch-edge__tag--return">Confirmed amt.</div>
+                            <div class="arch-edge__line arch-edge__line--in"></div>
+                        </div>
+                    </div>
+
+                    <div class="arch-node">
+                        <div class="arch-node__tag">Party 03</div>
+                        <div class="arch-node__name">Insurance<br>Partner</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: Processing Time Roadmap -->
+        <section class="cs-section reveal">
+            <div class="cs-section__label">05 / Ownership & Roadmap</div>
+            <h2 class="cs-h2">Reducing processing from <em>multi-day to same-day</em></h2>
+            <p class="cs-text">This system runs entirely under my ownership; I monitor it, maintain it, and continue
+                iterating on it independently. Current claim processing runs across multiple days end-to-end. I'm
+                actively working on automation improvements to bring that down to same-day, reducing manual touchpoints
+                and accelerating the confirmation loop between all three parties.</p>
+
+            <div class="cs-diagram reveal">
+                <div class="cs-diagram__label">Claim processing time: current vs. target</div>
+                <div class="roadmap">
+                    <div class="roadmap__row">
+                        <div class="roadmap__label">Current</div>
+                        <div class="roadmap__track">
+                            <div class="roadmap__fill roadmap__fill--current">
+                                <span class="roadmap__fill-text">Multi-day end-to-end</span>
+                            </div>
+                        </div>
+                        <div class="roadmap__meta">
+                            <span class="roadmap__badge roadmap__badge--current">Live today</span>
+                        </div>
+                    </div>
+                    <div class="roadmap__row">
+                        <div class="roadmap__label">Target</div>
+                        <div class="roadmap__track">
+                            <div class="roadmap__fill roadmap__fill--target">
+                                <span class="roadmap__fill-text">Same-day</span>
+                            </div>
+                        </div>
+                        <div class="roadmap__meta">
+                            <span class="roadmap__badge roadmap__badge--target">Automation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- IMPACT STRIP -->
+    <div class="cs-impact">
+        <div class="cs-impact__inner">
+            <div class="cs-impact__label reveal">Outcomes</div>
+            <div class="cs-impact__grid cols-4 reveal">
+                <div class="cs-impact__item">
+                    <span class="cs-impact__value">100%</span>
+                    <p class="cs-impact__desc">Of active loan cohorts enrolled and insured, full portfolio coverage from
+                        day one of go-live</p>
+                </div>
+                <div class="cs-impact__item">
+                    <span class="cs-impact__value">0→1</span>
+                    <p class="cs-impact__desc">Built from blank page to production; no prior system, process, or
+                        internal precedent to reference</p>
+                </div>
+                <div class="cs-impact__item">
+                    <span class="cs-impact__value">0%</span>
+                    <p class="cs-impact__desc">Claim rejection rate due to calculation errors; snapshot architecture
+                        eliminated drift risk entirely</p>
+                </div>
+                <div class="cs-impact__item">
+                    <span class="cs-impact__value">&gt;7×</span>
+                    <p class="cs-impact__desc">Processing time improvement targeted via automation, from multi-day to
+                        same-day end-to-end</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAKEAWAY -->
+    <div class="cs-takeaway">
+        <div class="cs-takeaway__inner reveal">
+            <div class="cs-takeaway__label">What I Took Away</div>
+            <p class="cs-takeaway__text">Building a 0-to-1 system that sits at the intersection of a fintech platform, a
+                regulated insurance product, and an institutional lender's requirements forced me to think in systems -
+                not features. Every design decision had downstream consequences for accuracy, compliance, and
+                operational load. In financial systems, correctness isn't a nice-to-have. It's the product. And the PM's
+                job is to make sure every stakeholder - technical and non-technical - shares that understanding before a
+                single line of code is written.</p>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="cs-footer">
+        <div class="cs-footer__inner">
+            <a href="portfolio.html" class="cs-footer__link">← All work</a>
+            <div style="display: flex; gap: 2rem; align-items: center;">
+                <a href="cs-maps-cost.html" class="cs-footer__back-to">← Previous</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+
+
+        // Reveal
+        const reveals = document.querySelectorAll('.reveal');
+        const revealObs = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    revealObs.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+        reveals.forEach(el => revealObs.observe(el));
+    </script>
+
+</body>
+
+</html>

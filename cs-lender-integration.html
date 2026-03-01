@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>No Map of the Territory | Rafi Zhafransyah</title>
+    <meta name="description"
+        content="How I orchestrated a large-scale enterprise partner integration from zero to production at JULO - inheriting a mid-project handover and shipping under real operational constraints.">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230c1220'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Georgia,serif' font-size='16' font-weight='bold' fill='%23586994'%3ERZ%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/case-study.css">
+    <style>
+        :root {
+            --page-accent: #586994;
+        }
+
+        /* ─── TIMELINE DIAGRAM ─── */
+        .tl {
+            position: relative;
+            padding: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .tl__track {
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            gap: 0;
+            min-width: 680px;
+        }
+
+        .tl__line {
+            position: absolute;
+            top: 1.25rem;
+            left: 2rem;
+            right: 2rem;
+            height: 1px;
+            background: var(--border-light);
+        }
+
+        .tl__item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tl__dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1.5px solid var(--border-light);
+            flex-shrink: 0;
+            margin-bottom: 0.875rem;
+            transition: border-color 0.3s;
+        }
+
+        .tl__item--accent .tl__dot {
+            background: var(--page-accent);
+            border-color: var(--page-accent);
+            box-shadow: 0 0 0 3px rgba(88, 105, 148, 0.18);
+        }
+
+        .tl__item--pivot .tl__dot {
+            background: #b07d3a;
+            border-color: #b07d3a;
+            box-shadow: 0 0 0 3px rgba(176, 125, 58, 0.18);
+            width: 13px;
+            height: 13px;
+        }
+
+        .tl__label {
+            font-family: var(--mono);
+            font-size: 0.4375rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+            text-align: center;
+            line-height: 1.5;
+            padding: 0 0.25rem;
+        }
+
+        .tl__item--accent .tl__label {
+            color: var(--page-accent);
+        }
+
+        .tl__item--pivot .tl__label {
+            color: #b07d3a;
+        }
+
+        .tl__milestone {
+            font-family: var(--sans);
+            font-size: 0.6875rem;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: 0.375rem;
+            line-height: 1.4;
+            padding: 0 0.25rem;
+        }
+
+        .tl__item--pivot .tl__milestone {
+            color: #b07d3a;
+            font-weight: 500;
+        }
+
+        .tl__pivot-badge {
+            display: inline-block;
+            margin-top: 0.375rem;
+            font-family: var(--mono);
+            font-size: 0.375rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #b07d3a;
+            border: 1px solid rgba(176, 125, 58, 0.35);
+            padding: 0.125rem 0.375rem;
+            border-radius: 2px;
+        }
+
+        /* ─── MONEY FLOW DIAGRAM ─── */
+        .flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            flex-wrap: wrap;
+            row-gap: 2rem;
+        }
+
+        .flow__node {
+            background: var(--bg);
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            padding: 1.125rem 1.5rem;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .flow__node--center {
+            border-color: var(--page-accent);
+            box-shadow: 0 0 0 1px rgba(88, 105, 148, 0.2);
+        }
+
+        .flow__node-label {
+            font-family: var(--mono);
+            font-size: 0.4375rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--text-muted);
+            margin-bottom: 0.375rem;
+        }
+
+        .flow__node-name {
+            font-family: var(--sans);
+            font-size: 0.8125rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            line-height: 1.3;
+        }
+
+        .flow__node--center .flow__node-name {
+            color: var(--page-accent);
+        }
+
+        .flow__arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .flow__arrow-line {
+            width: 48px;
+            height: 1px;
+            background: var(--border-light);
+            position: relative;
+        }
+
+        .flow__arrow-line::after {
+            content: '';
+            position: absolute;
+            right: -1px;
+            top: -3px;
+            border-left: 5px solid var(--border-light);
+            border-top: 3px solid transparent;
+            border-bottom: 3px solid transparent;
+        }
+
+        .flow__arrow-line--return {
+            background: rgba(88, 105, 148, 0.4);
+        }
+
+        .flow__arrow-line--return::after {
+            left: -1px;
+            right: auto;
+            border-right: 5px solid rgba(88, 105, 148, 0.4);
+            border-left: none;
+        }
+
+        .flow__arrow-tag {
+            font-family: var(--mono);
+            font-size: 0.375rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .flow__arrow-tag--return {
+            color: rgba(88, 105, 148, 0.7);
+        }
+
+        .flow__col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ─── MOBILE ─── */
+        @media (max-width: 520px) {
+            .flow {
+                flex-direction: column;
+            }
+
+            .flow__arrow {
+                transform: rotate(90deg);
+            }
+        }
+
+        /* ─── SHARE CHART ─── */
+        .sc-row {
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            margin-bottom: 0.6875rem;
+        }
+
+        .sc-label {
+            font-family: var(--mono);
+            font-size: 0.4375rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            width: 3.25rem;
+            flex-shrink: 0;
+            text-align: right;
+        }
+
+        .sc-track {
+            flex: 1;
+            height: 26px;
+            background: var(--bg);
+            border: 1px solid var(--border-light);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .sc-fill {
+            height: 100%;
+            background: rgba(88, 105, 148, 0.35);
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 0.5rem;
+            width: 0;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sc-fill--peak {
+            background: rgba(88, 105, 148, 0.65);
+        }
+
+        .sc-fill--mature {
+            background: rgba(88, 105, 148, 0.5);
+        }
+
+        .sc-val {
+            font-family: var(--mono);
+            font-size: 0.4375rem;
+            color: var(--text-primary);
+            white-space: nowrap;
+            letter-spacing: 0.08em;
+        }
+
+        .sc-row--peak .sc-label {
+            color: var(--page-accent);
+        }
+
+        .sc-row--peak .sc-val {
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .sc-note {
+            font-family: var(--mono);
+            font-size: 0.375rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            width: 5.5rem;
+            flex-shrink: 0;
+        }
+
+        .sc-row--peak .sc-note {
+            color: var(--page-accent);
+        }
+
+        .sc-disclaimer {
+            font-family: var(--mono);
+            font-size: 0.375rem;
+            color: var(--text-muted);
+            margin-top: 1.25rem;
+            letter-spacing: 0.06em;
+            line-height: 1.7;
+        }
+
+        .sc-subgrid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 1.5rem;
+        }
+
+        .sc-stat {
+            background: var(--bg-card);
+            padding: 1rem 1.25rem;
+        }
+
+        .sc-stat__value {
+            font-family: var(--serif);
+            font-size: 1.375rem;
+            color: var(--page-accent);
+            font-weight: 600;
+            line-height: 1;
+            margin-bottom: 0.375rem;
+        }
+
+        .sc-stat__desc {
+            font-family: var(--sans);
+            font-size: 0.5625rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        @media (max-width: 480px) {
+            .sc-subgrid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .sc-note {
+                display: none;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .sc-subgrid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animate when .animated added */
+        .share-chart.animated .sc-fill {
+            width: var(--w);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .sc-fill {
+                transition: none !important;
+                width: var(--w) !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- BACK BUTTON -->
+    <a href="index.html"
+        style="position: fixed; top: 1.5rem; left: 1.5rem; z-index: 1000; display: inline-flex; align-items: center; justify-content: center; padding: 0.5rem 1rem; background: rgba(12, 18, 32, 0.8); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 100px; color: #e4e8ed; text-decoration: none; font-family: 'Space Mono', 'Courier New', monospace; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; transition: background 0.3s, transform 0.3s;"
+        onmouseover="this.style.background='rgba(255, 255, 255, 0.1)';this.style.transform='translateY(-2px)';"
+        onmouseout="this.style.background='rgba(12, 18, 32, 0.8)';this.style.transform='translateY(0)';">&larr; Back</a>
+
+
+
+    <!-- HERO -->
+    <header class="cs-hero">
+        <div class="cs-hero__inner">
+            <div class="cs-hero__eyebrow reveal">JULO &middot; Enterprise Integration &middot; 2025</div>
+            <h1 class="cs-hero__title reveal reveal-delay-1">
+                No Map of<br>
+                the <em>Territory</em>
+            </h1>
+
+            <div class="cs-meta reveal reveal-delay-2">
+                <div class="cs-meta__cell">
+                    <div class="cs-meta__label">Role</div>
+                    <div class="cs-meta__value">Product Manager</div>
+                </div>
+                <div class="cs-meta__cell">
+                    <div class="cs-meta__label">Timeline</div>
+                    <div class="cs-meta__value">Early – Mid 2025</div>
+                </div>
+                <div class="cs-meta__cell">
+                    <div class="cs-meta__label">Company</div>
+                    <div class="cs-meta__value">JULO Fintech</div>
+                </div>
+                <div class="cs-meta__cell">
+                    <div class="cs-meta__label">Impact</div>
+                    <div class="cs-meta__value">Significant disbursement growth</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- BODY -->
+    <main class="cs-body">
+
+        <!-- SECTION: The Stakes -->
+        <section class="cs-section reveal">
+            <div class="cs-section__label">01 / The Stakes</div>
+            <h2 class="cs-h2">A critical funding gap, and no safety net</h2>
+            <p class="cs-text">When I was assigned to this project, our funding situation was critical. Expanding our
+                institutional funding base was a strategic priority, diversifying our lending capacity and creating room
+                for controlled, sustainable growth. The pressure to deliver was immediate.</p>
+            <p class="cs-text">To make things harder: the PM leading this project transitioned off mid-way, with no
+                formal handover. I inherited fragmented documentation, fragmented institutional knowledge, and a project
+                already in motion, and was expected to drive it to completion.</p>
+            <p class="cs-text">It was my first time leading an integration of this scale. I had to learn everything on
+                the fly.</p>
+        </section>
+
+        <!-- SECTION: Timeline -->
+        <section class="cs-section reveal">
+            <div class="cs-section__label">02 / Project Timeline</div>
+            <h2 class="cs-h2">Eight months from inheritance to <em>go-live</em></h2>
+            <p class="cs-text">The project ran through a mid-stream architectural pivot: from a fully SFTP-based
+                integration to a hybrid model where disbursement moved to API while repayment settlement remained on
+                SFTP, adding one to two months and requiring all stakeholders to realign from scratch.</p>
+
+            <div class="cs-diagram reveal">
+                <div class="cs-diagram__label">Project milestones: Early 2024 to present</div>
+                <div class="tl">
+                    <div class="tl__track">
+                        <div class="tl__line"></div>
+
+                        <div class="tl__item">
+                            <div class="tl__dot"></div>
+                            <div class="tl__label">Phase 1</div>
+                            <div class="tl__milestone">Project Inherited</div>
+                        </div>
+
+                        <div class="tl__item">
+                            <div class="tl__dot"></div>
+                            <div class="tl__label">Phase 2</div>
+                            <div class="tl__milestone">Full SFTP<br>Flow Scoped</div>
+                        </div>
+
+                        <div class="tl__item tl__item--pivot">
+                            <div class="tl__dot"></div>
+                            <div class="tl__label">Phase 3</div>
+                            <div class="tl__milestone">Pivot: Disbursement<br>→ API</div>
+                            <span class="tl__pivot-badge">Repayment stays SFTP</span>
+                        </div>
+
+                        <div class="tl__item">
+                            <div class="tl__dot"></div>
+                            <div class="tl__label">Phase 4</div>
+                            <div class="tl__milestone">Data Mapping &amp; API Design</div>
+                        </div>
+
+                        <div class="tl__item">
+                            <div class="tl__dot"></div>
+                            <div class="tl__label">Phase 5</div>
+                            <div class="tl__milestone">UAT &amp; Integration Testing</div>
+                        </div>
+
+                        <div class="tl__item tl__item--accent">
+                            <div class="tl__dot"></div>
+                            <div class="tl__label">Phase 6</div>
+                            <div class="tl__milestone">Go-Live</div>
+                        </div>
+
+                        <div class="tl__item">
+                            <div class="tl__dot"></div>
+                            <div class="tl__label">Phase 7</div>
+                            <div class="tl__milestone">Post-Launch Monitoring</div>
+                        </div>
+
+                        <div class="tl__item tl__item--accent">
+                            <div class="tl__dot"></div>
+                            <div class="tl__label">Ongoing</div>
+                            <div class="tl__milestone">Stable &amp; Maintained</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: Responsibilities -->
+        <section class="cs-section reveal">
+            <div class="cs-section__label">03 / Scope of Ownership</div>
+            <h2 class="cs-h2">Not a single-track PM role, an <em>orchestrator</em></h2>
+            <p class="cs-text">This wasn't a single-track PM role. I was the orchestrator across the entire integration
+                lifecycle, coordinating across engineering, QA, business, and an external institutional partner
+                simultaneously.</p>
+            <ul class="cs-list">
+                <li><strong>Data mapping and structure</strong><span class="cs-list__desc">Aligning our internal data
+                        models with the lender's requirements</span></li>
+                <li><strong>UAT coordination</strong><span class="cs-list__desc">Managing test scenarios across both
+                        sides of the integration</span></li>
+                <li><strong>Money flow design</strong><span class="cs-list__desc">Mapping how funds would move from
+                        lender to borrower and back</span></li>
+                <li><strong>Production release</strong><span class="cs-list__desc">Coordinating the go-live across
+                        engineering, operations, and the lender's team</span></li>
+                <li><strong>Post-launch maintenance</strong><span class="cs-list__desc">Owning operational stability
+                        including callback monitoring and reconciliation</span></li>
+            </ul>
+        </section>
+
+        <!-- SECTION: Money Flow -->
+        <section class="cs-section reveal">
+            <div class="cs-section__label">04 / Money Flow Architecture</div>
+            <h2 class="cs-h2">Designing how <em>large-scale institutional funds</em> move</h2>
+            <p class="cs-text">Mapping the money flow was one of the most consequential design decisions in the project.
+                Errors in disbursement routing or repayment settlement at this scale would cascade instantly. The
+                architecture had to be airtight before a single line of code was written.</p>
+
+            <div class="cs-diagram reveal">
+                <div class="cs-diagram__label">Fund flow: disbursement &amp; repayment · hybrid API / SFTP architecture
+                </div>
+                <div class="flow">
+                    <div class="flow__node">
+                        <div class="flow__node-label">Party 01</div>
+                        <div class="flow__node-name">Institutional<br>Lender</div>
+                    </div>
+
+                    <div class="flow__col">
+                        <div class="flow__arrow">
+                            <div class="flow__arrow-line"></div>
+                            <div class="flow__arrow-tag">Credit facility · <span
+                                    style="color: var(--page-accent);">API</span></div>
+                        </div>
+                        <div class="flow__arrow">
+                            <div class="flow__arrow-line--return flow__arrow-line"></div>
+                            <div class="flow__arrow-tag flow__arrow-tag--return">Settlement · <span
+                                    style="color: #b07d3a;">SFTP</span></div>
+                        </div>
+                    </div>
+
+                    <div class="flow__node flow__node--center">
+                        <div class="flow__node-label">Party 02</div>
+                        <div class="flow__node-name">JULO<br>Platform</div>
+                    </div>
+
+                    <div class="flow__col">
+                        <div class="flow__arrow">
+                            <div class="flow__arrow-line"></div>
+                            <div class="flow__arrow-tag">Disbursement</div>
+                        </div>
+                        <div class="flow__arrow">
+                            <div class="flow__arrow-line--return flow__arrow-line"></div>
+                            <div class="flow__arrow-tag flow__arrow-tag--return">Repayment</div>
+                        </div>
+                    </div>
+
+                    <div class="flow__node">
+                        <div class="flow__node-label">Party 03</div>
+                        <div class="flow__node-name">Borrower</div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="cs-text" style="margin-top: 2rem;">The lender's pivot to API-based disbursement - mandated
+                mid-project, meant redesigning the outbound money flow from scratch while keeping repayment settlement
+                on SFTP. We had no bargaining power over the protocol choice; institutional lenders set the terms. The
+                result is a hybrid architecture where each transaction direction uses the channel the lender requires.
+            </p>
+        </section>
+
+        <!-- SECTION: The Pivot -->
+        <section class="cs-section reveal">
+            <div class="cs-section__label">05 / The Pivot</div>
+            <h2 class="cs-h2">Partial architectural reset: no bargaining power</h2>
+            <p class="cs-text">Midway through the project, after the SFTP-based flow had already been scoped and largely
+                designed, the lender requested a shift to API-based disbursement. Repayment settlement would remain SFTP
+                - but the disbursement leg, where funds flow from the lender to the platform, had to be rebuilt as an
+                API integration. It pushed the timeline back by one to two months and required re-aligning the entire
+                team's understanding of the outbound money flow architecture.</p>
+
+            <div class="cs-pullquote">
+                <p>With no assumptions to fall back on, I had to reason through every decision from first principles,
+                    and document everything as I went, building the knowledge base that hadn't existed when I inherited
+                    the project.</p>
+            </div>
+
+            <p class="cs-text">This is where having no prior experience in this type of integration actually sharpened
+                my instincts. No prior mental models meant no prior assumptions to protect.</p>
+        </section>
+
+        <!-- SECTION: Post-Launch -->
+        <section class="cs-section reveal">
+            <div class="cs-section__label">06 / Post-Launch</div>
+            <h2 class="cs-h2">Going live was not the finish line</h2>
+            <p class="cs-text">Going live wasn't the finish line. A hybrid API/SFTP integration requires continuous
+                operational attention across both channels: API callback success rates on the disbursement side, SFTP
+                file integrity and delivery confirmation on the settlement side, reconciliation across both, and
+                exception handling throughout.</p>
+            <p class="cs-text">I maintained ownership of this through post-launch, identifying and resolving operational
+                issues as they surfaced, ensuring disbursements continued running without disruption. Uptime has
+                remained above OJK-licensed platform SLA thresholds since go-live, with no critical production failures.
+            </p>
+        </section>
+
+        <!-- SECTION: Live Data -->
+        <section class="cs-section reveal">
+            <div class="cs-section__label">07 / Live Data: Channel Impact</div>
+            <h2 class="cs-h2">From 0% to <em>~40% of total monthly disbursement</em></h2>
+            <p class="cs-text">The chart below shows the institutional lender channel's share of total platform monthly
+                disbursement by amount since go-live, calculated from internal data as a percentage ratio. Absolute
+                figures are withheld. The channel ramped from a soft pilot in August to representing close to 40% of
+                total platform volume within six months, becoming one of the platform's largest single funding sources
+                alongside other active institutional channels.</p>
+            <p class="cs-text">The channel also skews toward higher average ticket sizes; its share of disbursement
+                <em>by amount</em> consistently runs 4–6 percentage points above its share <em>by loan count</em>, which
+                itself stabilized at ~33% of total monthly loans by Q1 2026. The channel's average ticket size runs
+                approximately 17% above platform average, consistent with a slightly higher-value borrower segment being
+                served through the institutional channel.
+            </p>
+
+            <div class="cs-diagram reveal" id="share-chart-wrap">
+                <div class="cs-diagram__label">Institutional lender channel · share of total platform monthly
+                    disbursement · Aug 2025 – Feb 2026 (derived ratio)</div>
+                <div class="share-chart" id="shareChart">
+
+                    <div class="sc-row">
+                        <div class="sc-label">Aug '25</div>
+                        <div class="sc-track">
+                            <div class="sc-fill" style="--w: 1%;">
+                                <span class="sc-val">&lt;1%</span>
+                            </div>
+                        </div>
+                        <div class="sc-note">Soft launch / pilot</div>
+                    </div>
+
+                    <div class="sc-row">
+                        <div class="sc-label">Sep '25</div>
+                        <div class="sc-track">
+                            <div class="sc-fill" style="--w: 18%;">
+                                <span class="sc-val">18%</span>
+                            </div>
+                        </div>
+                        <div class="sc-note">1st full month</div>
+                    </div>
+
+                    <div class="sc-row">
+                        <div class="sc-label">Oct '25</div>
+                        <div class="sc-track">
+                            <div class="sc-fill" style="--w: 23%;">
+                                <span class="sc-val">23%</span>
+                            </div>
+                        </div>
+                        <div class="sc-note">Growing</div>
+                    </div>
+
+                    <div class="sc-row">
+                        <div class="sc-label">Nov '25</div>
+                        <div class="sc-track">
+                            <div class="sc-fill" style="--w: 23%;">
+                                <span class="sc-val">23%</span>
+                            </div>
+                        </div>
+                        <div class="sc-note">Stable</div>
+                    </div>
+
+                    <div class="sc-row">
+                        <div class="sc-label">Dec '25</div>
+                        <div class="sc-track">
+                            <div class="sc-fill sc-fill--mature" style="--w: 32%;">
+                                <span class="sc-val">32%</span>
+                            </div>
+                        </div>
+                        <div class="sc-note">Maturing</div>
+                    </div>
+
+                    <div class="sc-row sc-row--peak">
+                        <div class="sc-label">Jan '26</div>
+                        <div class="sc-track">
+                            <div class="sc-fill sc-fill--peak" style="--w: 40%;">
+                                <span class="sc-val">40%</span>
+                            </div>
+                        </div>
+                        <div class="sc-note">Peak ↑</div>
+                    </div>
+
+                    <div class="sc-row">
+                        <div class="sc-label">Feb '26</div>
+                        <div class="sc-track">
+                            <div class="sc-fill sc-fill--mature" style="--w: 38%;">
+                                <span class="sc-val">38%</span>
+                            </div>
+                        </div>
+                        <div class="sc-note">Current</div>
+                    </div>
+
+                </div>
+
+                <div class="sc-subgrid">
+                    <div class="sc-stat">
+                        <div class="sc-stat__value">~40%</div>
+                        <div class="sc-stat__desc">Peak share of total monthly platform disbursement by amount (Jan
+                            2026)</div>
+                    </div>
+                    <div class="sc-stat">
+                        <div class="sc-stat__value">1 in 3</div>
+                        <div class="sc-stat__desc">Loans disbursed monthly routed through the institutional lender
+                            channel by Feb 2026</div>
+                    </div>
+                    <div class="sc-stat">
+                        <div class="sc-stat__value">±5%</div>
+                        <div class="sc-stat__desc">Monthly share variance over the last 3 months; channel is
+                            operationally stable</div>
+                    </div>
+                    <div class="sc-stat">
+                        <div class="sc-stat__value">+17%</div>
+                        <div class="sc-stat__desc">Channel's average ticket size above platform average; higher-value
+                            borrower profile being served</div>
+                    </div>
+                    <div class="sc-stat">
+                        <div class="sc-stat__value">~93%</div>
+                        <div class="sc-stat__desc">Platform-wide repeat borrower rate; the asset quality profile that
+                            underpins institutional lending partnerships</div>
+                    </div>
+                    <div class="sc-stat">
+                        <div class="sc-stat__value">6 mo</div>
+                        <div class="sc-stat__desc">From go-live to reaching one-third of total monthly loans; organic
+                            ramp, no forced volume</div>
+                    </div>
+                </div>
+
+                <p class="sc-disclaimer">Source: internal monthly disbursement data, Feb 2026. All percentages derived
+                    as lender_channel_amt ÷ platform_total_amt per month. Absolute values withheld. Ticket size and
+                    repeat rate derived from the same dataset.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- IMPACT STRIP -->
+    <div class="cs-impact">
+        <div class="cs-impact__inner">
+            <div class="cs-impact__label reveal">Outcomes</div>
+            <div class="cs-impact__grid cols-4 reveal">
+                <div class="cs-impact__item">
+                    <span class="cs-impact__value">~40%</span>
+                    <p class="cs-impact__desc">Peak share of total monthly platform disbursement by amount, reached
+                        within 6 months of go-live (Jan 2026)</p>
+                </div>
+                <div class="cs-impact__item">
+                    <span class="cs-impact__value">Top-tier</span>
+                    <p class="cs-impact__desc">Credit facility size: among the largest single-partner onboardings in the
+                        platform's institutional lending history</p>
+                </div>
+                <div class="cs-impact__item">
+                    <span class="cs-impact__value">SLA+</span>
+                    <p class="cs-impact__desc">Uptime exceeding standard fintech production SLA thresholds per
+                        OJK-licensed platform benchmarks</p>
+                </div>
+                <div class="cs-impact__item">
+                    <span class="cs-impact__value">8 mo</span>
+                    <p class="cs-impact__desc">From project inheritance to go-live, faster than the industry median for
+                        equivalent API-based lending integrations</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAKEAWAY -->
+    <div class="cs-takeaway">
+        <div class="cs-takeaway__inner reveal">
+            <div class="cs-takeaway__label">What I Took Away</div>
+            <p class="cs-takeaway__text">The hardest part of this project wasn't the technical complexity - it was
+                operating with confidence in a high-stakes environment where I had no safety net, no prior experience,
+                and no complete map of the territory. What carried me through was treating every unknown as a structured
+                problem: identify what I don't know, find who does, document what I learn, and keep the integration
+                moving forward. That approach - more than any specific skill - is what I'd take into any complex
+                cross-functional project.</p>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="cs-footer">
+        <div class="cs-footer__inner">
+            <a href="portfolio.html" class="cs-footer__link">← All work</a>
+            <div style="display: flex; gap: 2rem; align-items: center;">
+                <a href="cs-maps-cost.html" class="cs-footer__back-to">Next case study →</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+
+
+        // Reveal
+        const reveals = document.querySelectorAll('.reveal');
+        const revealObs = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    revealObs.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+        reveals.forEach(el => revealObs.observe(el));
+
+        // Animate share chart bars
+        const shareChart = document.getElementById('shareChart');
+        if (shareChart) {
+            const shareObs = new IntersectionObserver((entries) => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        shareChart.classList.add('animated');
+                        shareObs.unobserve(e.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+            shareObs.observe(shareChart);
+        }
+    </script>
+
+</body>
+
+</html>
