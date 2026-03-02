@@ -292,7 +292,23 @@
                 height: var(--bar-h) !important;
             }
         }
+
+        /* Light Mode Overrides for Chart Visibility */
+        [data-theme="light"] .chart__bar--baseline {
+            background: rgba(162, 171, 171, 0.45);
+            /* Darker for light mode visibility */
+        }
+
+        [data-theme="light"] .chart__legend-item:first-child .chart__legend-dot {
+            background: rgba(162, 171, 171, 0.6) !important;
+        }
     </style>
+    <script>
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    </script>
 </head>
 
 <body>
