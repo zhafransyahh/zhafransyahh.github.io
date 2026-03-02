@@ -32,7 +32,7 @@ Defined in `css/main.css` as CSS custom properties:
 }
 ```
 
-**Theme:** Dark editorial. Navy-black background, cool off-white type, Slate Blue accent. Serious, premium, intentionally non-generic.
+**Theme:** Dark editorial default (navy-black background, cool off-white type) with a togglable **Light Mode** (Apple System Grey tones, crisp white cards). Selected via an iOS-style nav switch and persisted using `localStorage`.
 
 **Typography:**
 - **Fraunces** — Optical-size aware serif. Used for headlines, hero titles, impact values.

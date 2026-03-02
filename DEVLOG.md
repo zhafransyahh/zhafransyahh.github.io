@@ -625,3 +625,29 @@ Nav links in `index.html` were reduced from 5 to 3: **About · Work · Contact**
 
 - The `Approach` section was moved to immediately follow the bio block in `about.html`. It works logically as part of the broader "Product thinker / Technical builder" narrative.
 - The `Impact` metric strip was moved out of the homepage and embedded directly after `Approach`, right before the timeline of `Experience`. The label was appropriately set to "Impacts".
+
+---
+
+# Session 4 — Light Mode Implementation
+
+## Global Light Mode
+
+### Overview
+Added a Light Mode to complement the default dark editorial theme. Accessible via a navigation toggle that persists across sessions. The "Academy Work" case study (`gitra-project.html`) was deliberately excluded to preserve its original, self-contained design.
+
+### Colors and Contrast
+- **Background:** Avoided stark white for the main background. Used Apple System Grey tones (`--bg: #f2f2f7`, `--bg-subtle: #e5e5ea`) to reduce eye strain, while keeping cards crisp white (`--bg-card: #ffffff`).
+- **Text:** Rebalanced for light backgrounds (`--text-primary: #1c1c1e`). Specifically tweaked `--text-muted` to `#636366` (System Gray 2) when the original `#8e8e93` proved too low-contrast against the light backgrounds.
+- **Dust Particles (Hero):** The `hero__bg` radial gradients became invisible in light mode with their original `0.05` to `0.08` opacity. Opacities were boosted to `0.25` - `0.35` for light mode to maintain the same atmospheric effect.
+
+### iOS-Style Theme Toggle
+Replaced a standard button with a functional, CSS-only iOS-style toggle in the nav (`.nav__theme-toggle`).
+- Custom `::after` pseudo-element for the animated knob.
+- Color transitions: dark grey background (`#39393d`) in dark mode, active green (`#34c759`) in light mode.
+- Embedded vibrant yellow (`#ffd60a`) SVG sun/moon icons directly into the track via absolute positioning and z-indexing. 
+
+### Theme Persistence & FOUC Prevention
+To prevent a Flash of Unstyled Content (FOUC), an inline script blocks rendering in the `<head>` of every HTML file to check `localStorage` and immediately apply the `data-theme="light"` attribute if the user previously selected it. 
+
+### Specific Override: Case Study Chart (`cs-maps-cost.html`)
+The "pre-fix baseline" bars in the API volume chart used `rgba(162, 171, 171, 0.2)` which was invisible against the light card background. Mapped a specific override `[data-theme="light"] .chart__bar--baseline` to bump opacity to `0.45` to match the intended dark mode visual weight.
