@@ -153,9 +153,9 @@ Three professional PM case study HTML pages for JULO work:
 
 | File | Title | Subject |
 |---|---|---|
-| `cs-lender-integration.html` | No Map of the Territory | Institutional lender API integration, inherited mid-project |
+| `cs-lender-integration.html` | Without a Starting Line | Institutional lender API integration, inherited mid-project |
 | `cs-maps-cost.html` | Invisible at Low Volume | Google Maps API 99% cost reduction via UX fix |
-| `cs-insurance-claims.html` | The Arithmetic of Trust | Insurance claims system, 0-to-1 build |
+| `cs-insurance-claims.html` | Built for the Worst Day | Insurance claims system, 0-to-1 build |
 
 And `gitra-project.html` was given a new evocative title: **What the Hands Already Know**.
 
@@ -347,13 +347,13 @@ Case study pages:
 
 ### Titles and rationale
 
-**"No Map of the Territory"** (`cs-lender-integration.html`)
+**"Without a Starting Line"** (`cs-lender-integration.html`)
 The case study is explicitly about operating without documentation — inheriting a mid-project integration with no handover, no prior architect. Inverts Korzybski's "the map is not the territory" — here, there is no map and the territory is live production infrastructure.
 
 **"Invisible at Low Volume"** (`cs-maps-cost.html`)
 The entire case study turns on a single insight: the UX flaw always existed, it just became catastrophic at scale. The spike was not caused by a new bug — growth revealed a flaw that was invisible before. Functions as a general principle: many PM problems are of this class.
 
-**"The Arithmetic of Trust"** (`cs-insurance-claims.html`)
+**"Built for the Worst Day"** (`cs-insurance-claims.html`)
 Insurance claims at the intersection of lending and regulation is fundamentally a precision problem. "Arithmetic" signals systems thinking; "Trust" signals human stakes. Mirrors the cold/warm structure of "Machines of Loving Grace."
 
 **"What the Hands Already Know"** (`gitra-project.html`)
@@ -361,7 +361,7 @@ Gitra teaches guitar without visual feedback — through touch, sound, haptics. 
 
 ### Implementation
 Each title was applied in three places per project:
-1. `<title>` tag — e.g., `No Map of the Territory | Rafi Zhafransyah`
+1. `<title>` tag — e.g., `Without a Starting Line | Rafi Zhafransyah`
 2. `cs-hero__title` H1 — e.g., `No Map of<br>the <em>Territory</em>`
 3. Work card `<h3>` in both `index.html` and `portfolio.html`
 
@@ -417,7 +417,7 @@ Card structure:
 <a class="work__item reveal" href="cs-lender-integration.html">
     <div class="work__meta">
         <span class="featured__label">Product Manager · Enterprise Integration</span>
-        <h3 class="work__title">No Map of the Territory</h3>
+        <h3 class="work__title">Without a Starting Line</h3>
         <p class="work__problem">...</p>
         <p class="work__role">PM · Integration · Money Flow Design</p>
         <p class="work__outcome">~40% of total monthly platform volume · SLA-exceeding uptime since go-live</p>

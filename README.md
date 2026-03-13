@@ -70,9 +70,9 @@ Legacy Academy case studies (Gitra, JurnalKamu, Helm-In) retain their original s
 │   ├── main.css                 # Global design system (tokens, layout, nav, components)
 │   └── case-study.css           # Shared layout system for the 3 JULO case study pages
 │
-├── cs-lender-integration.html      # Case study: "No Map of the Territory" (institutional lender integration)
+├── cs-lender-integration.html      # Case study: "Without a Starting Line" (institutional lender integration)
 ├── cs-maps-cost.html            # Case study: "Invisible at Low Volume" (Maps API cost reduction)
-├── cs-insurance-claims.html     # Case study: "The Arithmetic of Trust" (insurance claims 0-to-1)
+├── cs-insurance-claims.html     # Case study: "Built for the Worst Day" (insurance claims 0-to-1)
 │
 ├── gitra-project.html           # Case study: "What the Hands Already Know" (Gitra, Apple Dev Academy)
 ├── jurnal-kamu-project.html     # Case study: JurnalKamu mental health journal
@@ -154,9 +154,9 @@ The four main case studies use evocative, literary titles inspired by the style 
 
 | Title | Subject | File |
 |---|---|---|
-| No Map of the Territory | Institutional lender integration, inherited mid-project | `cs-lender-integration.html` |
+| Without a Starting Line | Institutional lender integration, inherited mid-project | `cs-lender-integration.html` |
 | Invisible at Low Volume | Maps API 99% cost reduction via UX fix | `cs-maps-cost.html` |
-| The Arithmetic of Trust | Insurance claims system, 0-to-1 | `cs-insurance-claims.html` |
+| Built for the Worst Day | Insurance claims system, 0-to-1 | `cs-insurance-claims.html` |
 | What the Hands Already Know | Gitra accessible guitar learning app | `gitra-project.html` |
 
 ---
