@@ -18,13 +18,13 @@
         content="Technical Product Manager with 4+ years shipping complex products end-to-end. Portfolio and case studies.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://zhafransyahh.github.io/">
-    <meta property="og:image" content="https://zhafransyahh.github.io/img/pas foto.png">
+    <meta property="og:image" content="https://zhafransyahh.github.io/img/profile.jpg">
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Rafi Zhafransyah - Product Manager">
     <meta name="twitter:description"
         content="Technical Product Manager with 4+ years shipping complex products end-to-end.">
-    <meta name="twitter:image" content="https://zhafransyahh.github.io/img/pas foto.png">
+    <meta name="twitter:image" content="https://zhafransyahh.github.io/img/profile.jpg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -89,10 +89,6 @@
             <a href="#work" class="hero__cta reveal reveal-delay-3">
                 View case studies <span>&rarr;</span>
             </a>
-            <div class="hero__notice reveal reveal-delay-3"
-                style="margin-top: 1.5rem; font-family: var(--mono); font-size: 0.75rem; color: var(--text-muted); opacity: 0.8; letter-spacing: 0.05em; font-style: italic;">
-                &lowast; For the best experience, please view on desktop
-            </div>
         </div>
         <div class="hero__scroll">Scroll</div>
     </section>
@@ -104,7 +100,10 @@
             <div class="section__label reveal">01 / About</div>
             <div class="about__grid">
                 <div class="about__portrait">
-                    <img src="img/pas foto.png" alt="Rafi Zhafransyah" loading="lazy">
+                    <picture>
+                        <source srcset="img/profile.webp" type="image/webp">
+                        <img src="img/profile.jpg" alt="Rafi Zhafransyah" loading="lazy">
+                    </picture>
                     <div class="about__photo-caption">Jakarta, Indonesia</div>
                 </div>
                 <div class="about__content">
@@ -133,11 +132,10 @@
             <div class="section__label reveal">02 / Case Studies</div>
 
             <!-- Professional Work -->
-            <div class="section__sublabel reveal"
-                style="font-family: var(--mono); font-size: 0.4375rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-muted); margin-bottom: 1.5rem; margin-top: 1rem;">
-                Professional Work: JULO</div>
-            <div class="work__grid" style="margin-bottom: 3rem;">
-                <a class="work__item reveal" href="cs-lender-integration.html">
+            <div class="section__sublabel reveal">Professional Work: JULO</div>
+            <div class="work__grid work__grid--spaced">
+                <a class="work__item reveal" href="cs-lender-integration.html"
+                    style="--card-gradient: linear-gradient(135deg, #4a6fa5, #808CB2, #6679a8)">
                     <div class="work__meta">
                         <span class="featured__label">PM &middot; Institutional Lending</span>
                         <h3 class="work__title">Without a Starting Line</h3>
@@ -153,7 +151,8 @@
                     </div>
                 </a>
 
-                <a class="work__item reveal reveal-delay-1" href="cs-maps-cost.html">
+                <a class="work__item reveal reveal-delay-1" href="cs-maps-cost.html"
+                    style="--card-gradient: linear-gradient(135deg, #b8860b, #d4a04a, #c49339)">
                     <div class="work__meta">
                         <span class="featured__label">PM &middot; Cost Optimization</span>
                         <h3 class="work__title">Invisible at Low Volume</h3>
@@ -169,7 +168,8 @@
                     </div>
                 </a>
 
-                <a class="work__item reveal reveal-delay-2" href="cs-insurance-claims.html">
+                <a class="work__item reveal reveal-delay-2" href="cs-insurance-claims.html"
+                    style="--card-gradient: linear-gradient(135deg, #2d8a6e, #3ba88a, #34967a)">
                     <div class="work__meta">
                         <span class="featured__label">PM &middot; 0-to-1 System</span>
                         <h3 class="work__title">Built for the Worst Day</h3>
@@ -187,9 +187,7 @@
             </div>
 
             <!-- Academy Work -->
-            <div class="section__sublabel reveal"
-                style="font-family: var(--mono); font-size: 0.4375rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-muted); margin-bottom: 1.5rem;">
-                Academy Work: Apple Developer Academy</div>
+            <div class="section__sublabel section__sublabel--spaced reveal">Academy Work: Apple Developer Academy</div>
             <div class="work__grid">
                 <a class="work__item work__item--featured reveal" href="gitra-project.html">
                     <div class="work__thumb-wrapper">
@@ -226,7 +224,7 @@
                     <h2 class="contact__heading reveal">Let's build<br>something<br><em>together.</em></h2>
                 </div>
                 <div>
-                    <div class="section__label reveal" style="color: rgba(228,232,237,0.25);">03 / Contact</div>
+                    <div class="section__label section__label--contact reveal">03 / Contact</div>
                     <a href="mailto:zhf2201@gmail.com"
                         class="contact__email reveal reveal-delay-1">zhf2201@gmail.com</a>
                     <ul class="contact__socials reveal reveal-delay-2">
@@ -258,6 +256,15 @@
                                     <path d="M4 4v16M4 4l8 10 8-10M20 4v16" />
                                 </svg></a></li>
                     </ul>
+                    <a href="resume.pdf" class="contact__resume reveal reveal-delay-3" download>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                        Download Resume (PDF)
+                    </a>
                 </div>
             </div>
         </div>

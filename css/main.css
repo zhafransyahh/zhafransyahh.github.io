@@ -753,6 +753,30 @@ img {
     padding-bottom: 0;
 }
 
+/* Section sublabels (e.g., "Professional Work: JULO") */
+.section__sublabel {
+    font-family: var(--mono);
+    font-size: 0.5625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    margin-top: 1rem;
+}
+
+.section__sublabel--spaced {
+    margin-top: 2rem;
+}
+
+/* Contact section label override */
+.section__label--contact {
+    color: rgba(228, 232, 237, 0.25);
+}
+
+[data-theme="light"] .section__label--contact {
+    color: rgba(28, 28, 30, 0.15);
+}
+
 /* ═══════════════════════════════════════
    SELECTED WORK
 ═══════════════════════════════════════ */
@@ -760,6 +784,10 @@ img {
     display: grid;
     grid-template-columns: 1fr;
     gap: 0;
+}
+
+.work__grid--spaced {
+    margin-bottom: 3rem;
 }
 
 .work__item {
@@ -788,6 +816,29 @@ img {
         grid-template-columns: clamp(350px, 40%, 630px) 1fr;
         gap: 4rem;
     }
+}
+
+/* Text-only professional cards: single column so meta spans full width */
+.work__item[style*="--card-gradient"] {
+    position: relative;
+    grid-template-columns: 1fr;
+}
+
+.work__item[style*="--card-gradient"]::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--card-gradient);
+    border-radius: 3px 3px 0 0;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.work__item[style*="--card-gradient"]:hover::before {
+    opacity: 1;
 }
 
 .work__item:first-child {
@@ -1113,6 +1164,28 @@ img {
 .contact__email:hover {
     opacity: 0.7;
     color: var(--accent);
+}
+
+.contact__resume {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding: 0.5rem 1.25rem;
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    letter-spacing: 0.05em;
+}
+
+.contact__resume:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: rgba(128, 140, 178, 0.08);
 }
 
 .contact__socials {
