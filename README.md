@@ -1,6 +1,6 @@
 # Rafi Zhafransyah | Personal Portfolio
 
-Personal portfolio and CV site for Muhammad Rafi Zhafransyah, Technical Product Manager based in Jakarta.
+Personal portfolio and CV site for Muhammad Rafi Zhafransyah, Senior Associate Product Owner at Indodana, based in Jakarta.
 
 **Live site:** [zhafransyahh.github.io](https://zhafransyahh.github.io)
 
@@ -8,7 +8,7 @@ Personal portfolio and CV site for Muhammad Rafi Zhafransyah, Technical Product 
 
 ## Purpose
 
-A unified personal site that combines professional PM case studies (from JULO) with a CV and Academy design work (Apple Developer Academy). Designed to serve recruiters across industries — not just fintech — by framing work around transferable PM skills: enterprise integrations, cost optimization, 0-to-1 builds.
+A unified personal site that combines professional PM case studies (from JULO) with a CV and Academy design work (Apple Developer Academy). Designed to share product experience across industries — not just fintech — by framing work around transferable PM skills: enterprise integrations, cost optimization, 0-to-1 builds.
 
 ---
 
@@ -53,7 +53,7 @@ Each PM case study has a scoped accent via `--page-accent` on the body:
 | `cs-maps-cost.html` | Teal | `#3d8c6e` |
 | `cs-insurance-claims.html` | Indigo | `#7b5ea7` |
 
-Legacy Academy case studies (Gitra, JurnalKamu, Helm-In) retain their original self-contained color palettes.
+The Gitra Academy case study retains its own self-contained color palette.
 
 ---
 
@@ -70,23 +70,19 @@ Legacy Academy case studies (Gitra, JurnalKamu, Helm-In) retain their original s
 │   ├── main.css                 # Global design system (tokens, layout, nav, components)
 │   └── case-study.css           # Shared layout system for the 3 JULO case study pages
 │
-├── cs-lender-integration.html      # Case study: "Without a Starting Line" (institutional lender integration)
+├── cs-lender-integration.html   # Case study: "Without a Starting Line" (institutional lender integration)
 ├── cs-maps-cost.html            # Case study: "Invisible at Low Volume" (Maps API cost reduction)
 ├── cs-insurance-claims.html     # Case study: "Built for the Worst Day" (insurance claims 0-to-1)
 │
 ├── gitra-project.html           # Case study: "What the Hands Already Know" (Gitra, Apple Dev Academy)
-├── jurnal-kamu-project.html     # Case study: JurnalKamu mental health journal
-├── helm-in-project.html         # Case study: Helm-In smart helmet rental
 │
 ├── img/
 │   ├── Header.png               # Gitra project header
 │   ├── JurnalKamuThumbnail.png  # JurnalKamu thumbnail
-│   ├── pas foto.png             # Profile photo
+│   ├── pas foto.png             # Full-resolution profile photo
+│   ├── profile.jpg              # Optimized JPEG profile photo
+│   ├── profile.webp             # Optimized WebP profile photo
 │   └── portfolioThumb1.png      # Helm-In thumbnail
-│
-├── case-study-dbs-integration.md        # Source narrative for DBS case study
-├── case-study-google-maps-api.md        # Source narrative for Maps cost case study
-├── case-study-insurance-claims.md       # Source narrative for insurance claims case study
 │
 ├── README.md
 └── DEVLOG.md
@@ -105,7 +101,7 @@ Sections with anchor IDs:
 Nav links: About · Work · Contact
 
 ### `portfolio.html`
-- Professional Work: JULO (2024) — 3 case study cards
+- Professional Work: JULO — 3 case study cards
 - Academy Work: Apple Developer Academy — Gitra (featured)
 
 ### Case study pages (`cs-*.html`)
@@ -181,4 +177,4 @@ The four main case studies use evocative, literary titles inspired by the style 
 
 ## About
 
-Muhammad Rafi Zhafransyah is a Technical Product Manager at JULO with 4+ years owning end-to-end product delivery across Channeling & Funding, Onboarding, and Underwriting. Previously at Apple Developer Academy Indonesia. Portfolio is intentionally framed for any industry — the work is about systems, integrations, and precision, not about fintech specifically.
+Muhammad Rafi Zhafransyah is a Senior Associate Product Owner at Indodana (June 2026–present), with 4+ years of product management experience, including end-to-end product delivery across Channeling & Funding, Onboarding, and Underwriting at JULO (March 2022–May 2026). Previously at Apple Developer Academy Indonesia. The site highlights his current company without advertising availability for new roles. Portfolio is intentionally framed for any industry — the work is about systems, integrations, and precision, not about fintech specifically.
